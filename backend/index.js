@@ -15,7 +15,10 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // MongoDB connection (native driver)
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_CLUSTER || 'cluster0.j0hxo.mongodb.net'}/?retryWrites=true&w=majority&appName=StudentLifeToolkit`;
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_CLUSTER || 'cluster0.j0hxo.mongodb.net'}/?retryWrites=true&w=majority&appName=StudentLifeToolkit`;
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.o1alckr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
