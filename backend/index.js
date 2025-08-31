@@ -173,6 +173,37 @@ async function run() {
         res.status(500).send({ message: 'Failed to fetch budgets' });
       }
     });
+    // Update budget item
+    app.put('/budgets/:id', verifyToken, async (req, res) => {
+      try {
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).send({ message: 'Invalid ID format' });
+        }
+
+        const payload = req.body;
+        const amount = Number(payload.amount);
+
+        if (!payload.type || !payload.label || isNaN(amount) || amount <= 0) {
+          return res.status(400).send({ message: 'type,label,positive amount required' });
+        }
+
+        const result = await budgetsCol.updateOne(
+          { _id: new ObjectId(id), email: payload.email }, // also check email match
+          { $set: { type: payload.type, label: payload.label, amount, updatedAt: Date.now() } }
+        );
+
+        if (result.matchedCount === 0) {
+          return res.status(404).send({ message: 'Budget item not found' });
+        }
+
+        res.send(result);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Failed to update budget item' });
+      }
+    });
+
 
     // (Optional) delete budget item
     app.delete('/budgets/:id', verifyToken, async (req, res) => {
@@ -277,6 +308,7 @@ async function run() {
     app.get('/questions/random', async (req, res) => {
       try {
         const count = await questionsCol.countDocuments();
+        console.log('server side response:--->', count);
         if (count === 0) return res.status(404).send({ message: 'No questions yet. Run /seed-questions' });
         const rnd = Math.floor(Math.random() * count);
         const q = await questionsCol.find().skip(rnd).limit(1).toArray();

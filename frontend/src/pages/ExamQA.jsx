@@ -10,6 +10,7 @@ export default function ExamQA(){
   const load = async ()=>{
     try{
       const { data } = await api.get('/questions/random');
+      console.log('exam q a section --->', data);
       setQ(data);
       setAnswer("");
     }catch(err){ Swal.fire("Error", err.message, "error"); }

@@ -4,25 +4,25 @@ import { useAuth } from "../context/AuthProvider";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-
+const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
   const nav = (
     <>
-      <li><NavLink to="/">Home</NavLink></li>
-      <li><NavLink to="/dashboard">Dashboard</NavLink></li>
-      <li><NavLink to="/classes">Classes</NavLink></li>
-      <li><NavLink to="/budget">Budget</NavLink></li>
-      <li><NavLink to="/planner">Planner</NavLink></li>
-      <li><NavLink to="/exam">Exam Q&A</NavLink></li>
-      <li><NavLink to="/focus">Focus Mode</NavLink></li>
+      <li><NavLink className={linkClass} to="/">Home</NavLink></li>
+      <li><NavLink className={linkClass} to="/dashboard">Dashboard</NavLink></li>
+      <li><NavLink className={linkClass} to="/classes">Classes</NavLink></li>
+      <li><NavLink className={linkClass} to="/budget">Budget</NavLink></li>
+      <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li>
+      <li><NavLink className={linkClass} to="/exam">Exam Q&A</NavLink></li>
+      <li><NavLink className={linkClass} to="/focus">Focus Mode</NavLink></li>
     </>
   );
 
   return (
-    <div className="navbar bg-secondary/60 backdrop-blur sticky top-0 z-50">
+    <div className="navbar bg-[#03A9F4] backdrop-blur sticky top-0 z-50 text-white font-semibold">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">☰</div>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-[#03A9F4] rounded-box w-52">
             {nav}
           </ul>
         </div>
@@ -39,12 +39,12 @@ export default function Navbar() {
                 <img src={user.photoURL || "https://i.ibb.co/2y0rPjH/user.png"} />
               </div>
             </div>
-            <button className="btn btn-sm btn-accent" onClick={logout}>Logout</button>
+            <button className="btn btn-sm font-semibold text-[#03A9F4] border-[#03A9F4]" onClick={logout}>Logout</button>
           </>
         ) : (
           <>
-            <Link to="/login" className="btn btn-sm">Login</Link>
-            <Link to="/register" className="btn btn-sm btn-primary">Register</Link>
+            <Link to="/login" className="btn btn-sm text-[#03A9F4] border-[#03A9F4]">Login</Link>
+            <Link to="/register" className="btn btn-sm text-[#03A9F4] border-[#03A9F4]">Register</Link>
           </>
         )}
       </div>

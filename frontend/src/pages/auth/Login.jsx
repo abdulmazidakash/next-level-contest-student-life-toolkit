@@ -35,14 +35,14 @@ export default function Login(){
 
   return (
     <div className="max-w-md mx-auto card bg-base-100 shadow p-6">
-      <h2 className="text-2xl font-semibold mb-4">Login</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-center text-[#03A9F4]">Login</h2>
       <form onSubmit={onSubmit} className="space-y-3">
         <input className="input input-bordered w-full" type="email" placeholder="Email" value={email} onChange={(e)=>setEmail(e.target.value)} required/>
         <input className="input input-bordered w-full" type="password" placeholder="Password" value={pass} onChange={(e)=>setPass(e.target.value)} required/>
-        <button className="btn btn-primary w-full" type="submit">Login</button>
+        <button className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC] w-full" type="submit">Login</button>
       </form>
-      <button className="btn btn-outline w-full mt-3" onClick={onGoogle}>Continue with Google</button>
-      <p className="mt-3 text-sm">New here? <Link className="link" to="/register">Register</Link></p>
+      <button className="btn text-[#03A9F4] border-[#03A9F4] w-full mt-3" onClick={onGoogle}>Continue with Google</button>
+      <p className="mt-3 text-sm text-center">New here? <Link className="link text-[#03A9F4]" to="/register">Register</Link></p>
     </div>
   );
 }
