@@ -134,6 +134,41 @@ async function run() {
       }
     });
 
+    //update class
+    app.put('/classes/:id', verifyToken, async (req, res) => {
+      try {
+        const id = req.params.id;
+        const payload = req.body;
+
+        console.log('update id:', id);
+        console.log('payload:', payload);
+
+        // Validate ObjectId
+        if (!ObjectId.isValid(id)) return res.status(400).send({message:'Invalid ID'});
+
+        // Remove _id from payload if exists
+        // if (payload._id) delete payload._id;
+
+        // Update only by _id to test
+        const result = await classesCol.updateOne(
+          { _id: new ObjectId(id) }, 
+          { $set: { ...payload, updatedAt: Date.now() } }
+        );
+
+        console.log('update result:', result);
+
+        if (result.matchedCount === 0)
+          return res.status(404).send({message: 'Class not found'});
+
+        res.send({success: true, message: 'Class updated successfully'});
+      } catch (error) {
+        console.error('Update class error:', error);
+        res.status(500).send({message: 'Server error', error});
+      }
+    });
+
+
+
     // Delete class
     app.delete('/classes/:id', verifyToken, async (req, res) => {
       try {
