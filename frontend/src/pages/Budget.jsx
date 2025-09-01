@@ -6,6 +6,7 @@ import {
   PieChart, Pie, Cell, Tooltip, Legend,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from "recharts";
+import { FiEdit2, FiFilter, FiTrash2 } from "react-icons/fi";
 
 const COLORS = ["#22c55e", "#ef4444", "#3b82f6", "#f59e0b", "#8b5cf6"];
 
@@ -138,8 +139,8 @@ export default function Budget() {
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
-        <input className="input input-bordered" placeholder="Label" value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} required />
-        <input className="input input-bordered" placeholder="Amount" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} required />
+        <input type="text" className="input input-bordered" placeholder="Label" value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} required />
+        <input type="number" className="input input-bordered" placeholder="Amount" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} required />
         <button className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC]">Add</button>
       </form>
 
@@ -176,7 +177,8 @@ export default function Budget() {
 
       {/* Table + Filter */}
       <div className="overflow-x-auto space-y-3">
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end">
+          <FiFilter className="mr-2 text-[#03A9F4] font-bold" /><span className="font-bold text-[#03A9F4] mr-2">Filter:</span>
           <select
             className="select select-bordered"
             value={filter}
@@ -200,8 +202,8 @@ export default function Budget() {
                 <td>${i.amount}</td>
                 <td>{new Date(i.createdAt).toLocaleString()}</td>
                 <td className="space-x-2">
-                  <button className="btn btn-xs btn-outline" onClick={() => onEdit(i)}>Edit</button>
-                  <button className="btn btn-xs btn-error" onClick={() => onDelete(i._id)}>Delete</button>
+                  <button className="btn btn-xs text-[#03A9F4] border-[#03A9F4]" onClick={() => onEdit(i)}><FiEdit2 className="font-semibold text-lg" /></button>
+                  <button className="btn btn-xs bg-[#03A9F4] text-white hover:bg-[#0398DC]" onClick={() => onDelete(i._id)}><FiTrash2 className="font-semibold text-lg" /></button>
                 </td>
               </tr>
             ))}
@@ -209,12 +211,11 @@ export default function Budget() {
         </table>
       </div>
 
-      {/* Edit Modal */}
      {/* Edit Modal */}
 {showModal && (
   <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-    <div className="card bg-base-100 shadow-lg w-96 p-6">
-      <h3 className="text-lg font-bold mb-4">Edit Budget Item</h3>
+    <div className="card bg-blue-50 shadow-lg w-96 p-6">
+      <h3 className="text-lg font-bold mb-4 text-center text-[#03A9F4]">Edit Budget Item</h3>
       <form onSubmit={update} className="space-y-3">
         <select
           className="select select-bordered w-full"
@@ -239,21 +240,9 @@ export default function Budget() {
           required
         />
         <div className="flex justify-end space-x-2">
-          {/* <button
-            type="button"
-            className="btn"
-            onClick={() => {
-              setShowModal(false);
-              setEditing(null); // <-- Reset editing state
-              setForm({ type: "income", label: "", amount: "" }); // <-- Reset form state
-            }}
-          >
-            Cancel
-          </button> */}
-
           <button
             type="button"
-            className="btn"
+            className="btn text-[#03A9F4] border-[#03A9F4]"
             onClick={() => {
               setShowModal(false);
               setEditing(null);
@@ -263,7 +252,7 @@ export default function Budget() {
             Cancel
           </button>
 
-          <button type="submit" className="btn btn-primary">Update</button>
+          <button type="submit" className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC]">Update</button>
         </div>
       </form>
     </div>

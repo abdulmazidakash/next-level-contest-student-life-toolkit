@@ -127,7 +127,7 @@ async function run() {
     app.get('/classes/:email', verifyToken, async (req, res) => {
       try {
         const email = req.params.email;
-        const items = await classesCol.find({ email }).sort({ day: 1, time: 1 }).toArray();
+        const items = await classesCol.find({ email }).sort({ day: 1}).toArray();
         res.send(items);
       } catch (err) {
         res.status(500).send({ message: 'Failed to fetch classes' });
