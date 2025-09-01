@@ -6,7 +6,9 @@ import {
   PieChart, Pie, Cell, Tooltip, Legend,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from "recharts";
-import { FiEdit2, FiFilter, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiFilter, FiTrash2, FiTrendingUp, FiDollarSign } from "react-icons/fi";
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from "framer-motion"; // 🌀 motion import
 
 const COLORS = ["#22c55e", "#ef4444", "#3b82f6", "#f59e0b", "#8b5cf6"];
 
@@ -16,7 +18,7 @@ export default function Budget() {
   const [form, setForm] = useState({ type: "income", label: "", amount: "" });
   const [editing, setEditing] = useState(null);
   const [filter, setFilter] = useState("all");
-  const [showModal, setShowModal] = useState(false); // modal state
+  const [showModal, setShowModal] = useState(false);
 
   const load = async () => {
     const { data } = await api.get(`/budgets/${user.email}`);
@@ -36,54 +38,31 @@ export default function Budget() {
     load();
   };
 
-    const update = async (e) => {
-  e.preventDefault();
+  const update = async (e) => {
+    e.preventDefault();
+    if (!editing) return Swal.fire("Error", "No item selected for editing", "error");
 
-  if (!editing) {
-    return Swal.fire("Error", "No item selected for editing", "error");
-  }
+    const amt = Number(form.amount);
+    if (isNaN(amt) || amt <= 0) return Swal.fire("Invalid", "Amount must be positive", "warning");
 
-  const amt = Number(form.amount);
-  if (isNaN(amt) || amt <= 0) {
-    return Swal.fire("Invalid", "Amount must be positive", "warning");
-  }
-
-  if (!form.label.trim()) {
-    return Swal.fire("Invalid", "Label cannot be empty", "warning");
-  }
-
-  try {
-    // Use the email from the selected item to ensure match
-    const payload = {
-      type: form.type,
-      label: form.label,
-      amount: amt,
-      email: form.email
-    };
-
-    console.log("Updating budget:", editing, payload);
-
-    await api.put(`/budgets/${editing}`, payload);
-
-    Swal.fire("Updated", "Budget item updated", "success");
-    setEditing(null);
-    setShowModal(false);
-    setForm({ type: "income", label: "", amount: "" });
-    load();
-  } catch (err) {
-    console.error(err);
-    Swal.fire("Error", err.response?.data?.message || "Failed to update", "error");
-  }
-};
-
-
+    try {
+      const payload = { ...form, amount: amt, email: form.email };
+      await api.put(`/budgets/${editing}`, payload);
+      Swal.fire("Updated", "Budget item updated", "success");
+      setEditing(null);
+      setShowModal(false);
+      setForm({ type: "income", label: "", amount: "" });
+      load();
+    } catch (err) {
+      Swal.fire("Error", err.response?.data?.message || "Failed to update", "error");
+    }
+  };
 
   const onEdit = (item) => {
-  setForm({ type: item.type, label: item.label, amount: item.amount, email: item.email });
-  setEditing(item._id);
-  setShowModal(true);
-};
-
+    setForm({ type: item.type, label: item.label, amount: item.amount, email: item.email });
+    setEditing(item._id);
+    setShowModal(true);
+  };
 
   const onDelete = async (id) => {
     const ok = await Swal.fire({
@@ -125,16 +104,47 @@ export default function Budget() {
   }, [list, filter]);
 
   return (
-    <div className="space-y-8">
+    <motion.div
+      className="space-y-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
       {/* Summary stats */}
-      <div className="stats  border border-gray-300">
-        <div className="stat"><div className="stat-title text-[#03A9F4]">Income</div><div className="stat-value text-[#03A9F4]">${totals.income}</div></div>
-        <div className="stat"><div className="stat-title text-[#03A9F4]">Expense</div><div className="stat-value text-[#03A9F4]">${totals.expense}</div></div>
-        <div className="stat"><div className="stat-title text-[#03A9F4]">Balance</div><div className="stat-value text-[#03A9F4]">${totals.balance}</div></div>
-      </div>
+      <motion.div
+        className="stats border border-gray-300 shadow-md"
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="stat">
+          <div className="stat-title flex items-center gap-1 text-[#03A9F4]">
+            <FiTrendingUp /> Income
+          </div>
+          <div className="stat-value text-[#03A9F4]">${totals.income}</div>
+        </div>
+        <div className="stat">
+          <div className="stat-title flex items-center gap-1 text-[#03A9F4]">
+            <FiTrash2 /> Expense
+          </div>
+          <div className="stat-value text-[#03A9F4]">${totals.expense}</div>
+        </div>
+        <div className="stat">
+          <div className="stat-title flex items-center gap-1 text-[#03A9F4]">
+            <FiDollarSign /> Balance
+          </div>
+          <div className="stat-value text-[#03A9F4]">${totals.balance}</div>
+        </div>
+      </motion.div>
 
       {/* Add Form */}
-      <form onSubmit={add} className="card bg-base-100  p-6 grid md:grid-cols-4 gap-3 shadow">
+      <motion.form
+        onSubmit={add}
+        className="card bg-base-100 p-6 grid md:grid-cols-4 gap-3 shadow"
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <select className="select select-bordered" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
           <option value="income">Income</option>
           <option value="expense">Expense</option>
@@ -142,11 +152,16 @@ export default function Budget() {
         <input type="text" className="input input-bordered" placeholder="Label" value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} required />
         <input type="number" className="input input-bordered" placeholder="Amount" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} required />
         <button className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC]">Add</button>
-      </form>
+      </motion.form>
 
       {/* Charts */}
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="card bg-base-100 shadow p-4 border border-gray-300">
+        <motion.div
+          className="card bg-base-100 shadow p-4 border border-gray-300"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <h3 className="text-lg font-bold mb-2 text-[#03A9F4]">Income vs Expense</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -159,9 +174,14 @@ export default function Budget() {
               <Legend />
             </PieChart>
           </ResponsiveContainer>
-        </div>
+        </motion.div>
 
-        <div className="card border border-gray-300 bg-base-100 shadow p-4">
+        <motion.div
+          className="card border border-gray-300 bg-base-100 shadow p-4"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <h3 className="text-lg font-bold mb-2 text-[#03A9F4]">By Category</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={barData}>
@@ -172,11 +192,16 @@ export default function Budget() {
               <Bar dataKey="value" fill="#03A9F4" />
             </BarChart>
           </ResponsiveContainer>
-        </div>
+        </motion.div>
       </div>
 
       {/* Table + Filter */}
-      <div className="overflow-x-auto space-y-3">
+      <motion.div
+        className="overflow-x-auto space-y-3"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="flex items-center justify-end">
           <FiFilter className="mr-2 text-[#03A9F4] font-bold" /><span className="font-bold text-[#03A9F4] mr-2">Filter:</span>
           <select
@@ -191,74 +216,77 @@ export default function Budget() {
         </div>
 
         <table className="table">
-          <thead className="">
+          <thead>
             <tr className="text-[#03A9F4]"><th>Type</th><th>Label</th><th>Amount</th><th>When</th><th>Action</th></tr>
           </thead>
           <tbody>
-            {filteredList.map((i) => (
-              <tr key={i._id}>
-                <td><span className={`badge ${i.type === 'income' ? 'badge-success' : 'badge-error'}`}>{i.type}</span></td>
-                <td>{i.label}</td>
-                <td>${i.amount}</td>
-                <td>{new Date(i.createdAt).toLocaleString()}</td>
-                <td className="space-x-2">
-                  <button className="btn btn-xs text-[#03A9F4] border-[#03A9F4]" onClick={() => onEdit(i)}><FiEdit2 className="font-semibold text-lg" /></button>
-                  <button className="btn btn-xs bg-[#03A9F4] text-white hover:bg-[#0398DC]" onClick={() => onDelete(i._id)}><FiTrash2 className="font-semibold text-lg" /></button>
-                </td>
-              </tr>
-            ))}
+            <AnimatePresence>
+              {filteredList.map((i) => (
+                <motion.tr
+                  key={i._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <td><span className={`badge ${i.type === 'income' ? 'badge-success' : 'badge-error'}`}>{i.type}</span></td>
+                  <td>{i.label}</td>
+                  <td>${i.amount}</td>
+                  <td>{new Date(i.createdAt).toLocaleString()}</td>
+                  <td className="space-x-2">
+                    <button className="btn btn-xs text-[#03A9F4] border-[#03A9F4]" onClick={() => onEdit(i)}><FiEdit2 /></button>
+                    <button className="btn btn-xs bg-[#03A9F4] text-white hover:bg-[#0398DC]" onClick={() => onDelete(i._id)}><FiTrash2 /></button>
+                  </td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </tbody>
         </table>
-      </div>
+      </motion.div>
 
-     {/* Edit Modal */}
-{showModal && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-    <div className="card bg-blue-50 shadow-lg w-96 p-6">
-      <h3 className="text-lg font-bold mb-4 text-center text-[#03A9F4]">Edit Budget Item</h3>
-      <form onSubmit={update} className="space-y-3">
-        <select
-          className="select select-bordered w-full"
-          value={form.type}
-          onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
-        >
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-        <input
-          className="input input-bordered w-full"
-          placeholder="Label"
-          value={form.label}
-          onChange={e => setForm(f => ({ ...f, label: e.target.value }))}
-          required
-        />
-        <input
-          className="input input-bordered w-full"
-          placeholder="Amount"
-          value={form.amount}
-          onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-          required
-        />
-        <div className="flex justify-end space-x-2">
-          <button
-            type="button"
-            className="btn text-[#03A9F4] border-[#03A9F4]"
-            onClick={() => {
-              setShowModal(false);
-              setEditing(null);
-              setForm({ type: "income", label: "", amount: "" }); // email cleared
-            }}
+      {/* Edit Modal */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            Cancel
-          </button>
-
-          <button type="submit" className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC]">Update</button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
-    </div>
+            <motion.div
+              className="card bg-blue-50 shadow-lg w-96 p-6"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <h3 className="text-lg font-bold mb-4 text-center text-[#03A9F4]">Edit Budget Item</h3>
+              <form onSubmit={update} className="space-y-3">
+                <select className="select select-bordered w-full" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                </select>
+                <input className="input input-bordered w-full" placeholder="Label" value={form.label} onChange={e => setForm(f => ({ ...f, label: e.target.value }))} required />
+                <input className="input input-bordered w-full" placeholder="Amount" value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))} required />
+                <div className="flex justify-end space-x-2">
+                  <button
+                    type="button"
+                    className="btn text-[#03A9F4] border-[#03A9F4]"
+                    onClick={() => {
+                      setShowModal(false);
+                      setEditing(null);
+                      setForm({ type: "income", label: "", amount: "" });
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC]">Update</button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
