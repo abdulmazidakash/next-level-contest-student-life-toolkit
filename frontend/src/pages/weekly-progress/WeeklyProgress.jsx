@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { FiBarChart2, FiPieChart } from "react-icons/fi";
 import api from "../../services/api";
 import { useAuth } from "../../context/AuthProvider";
+import { FaChartLine } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 const COLORS = ["#22c55e", "#ef4444", "#3b82f6", "#f59e0b", "#8b5cf6", "#14b8a6", "#f97316"];
 
@@ -50,6 +52,21 @@ export default function WeeklyProgress() {
   }
 
   return (
+   <>
+   <Helmet>
+      <title>Weekly Progress | Student Toolkit</title>
+    </Helmet>
+   <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center gap-3 my-6"
+    >
+      <FaChartLine className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
+      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#03A9F4]">
+        Weekly Progress
+      </h1>
+    </motion.div>
     <motion.div
       className="space-y-8"
       initial={{ opacity: 0, y: 20 }}
@@ -131,5 +148,6 @@ export default function WeeklyProgress() {
         </motion.div>
       </div>
     </motion.div>
+   </>
   );
 }

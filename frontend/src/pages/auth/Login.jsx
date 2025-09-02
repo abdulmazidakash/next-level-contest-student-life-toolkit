@@ -37,6 +37,10 @@ export default function Login() {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Login | Student Toolkit</title>
+    </Helmet>
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
@@ -94,5 +98,6 @@ export default function Login() {
         <Link to="/" className="btn btn-ghost text-xl text-[#03A9F4]">🎒 Student Toolkit</Link>
       </p>
     </motion.div>
+    </>
   );
 }

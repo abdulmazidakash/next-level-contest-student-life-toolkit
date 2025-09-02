@@ -36,7 +36,7 @@ export default function App() {
             }
           />
           <Route
-            path="/classes"
+            path="/dashboard/classes-schedule"
             element={
               <ProtectedRoute>
                 <ClassSchedule />
@@ -44,7 +44,7 @@ export default function App() {
             }
           />
           <Route
-            path="/budget"
+            path="/dashboard/budget-tracking"
             element={
               <ProtectedRoute>
                 <Budget />
@@ -52,7 +52,7 @@ export default function App() {
             }
           />
           <Route
-            path="/planner"
+            path="/dashboard/study-planner"
             element={
               <ProtectedRoute>
                 <StudyPlanner />
@@ -60,7 +60,7 @@ export default function App() {
             }
           />
           <Route
-            path="/exam"
+            path="/dashboard/exam-q-and-a"
             element={
               <ProtectedRoute>
                 <ExamQA />
@@ -68,7 +68,7 @@ export default function App() {
             }
           />
           <Route
-            path="/weekly-progress"
+            path="/dashboard/weekly-progress"
             element={
               <ProtectedRoute>
                 <WeeklyProgress />

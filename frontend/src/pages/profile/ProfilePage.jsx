@@ -5,6 +5,7 @@ import { FiUser, FiBook, FiDollarSign, FiCheckCircle } from "react-icons/fi";
 import { useAuth } from "../../context/AuthProvider";
 import api from "../../services/api";
 import Loader from "../../components/Loader";
+import { Helmet } from "react-helmet";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -32,6 +33,10 @@ export default function ProfilePage() {
   if (!profile) return <div className="text-center py-10">Profile not found</div>;
 
   return (
+    <>
+    <Helmet>
+      <title>Profile | Student Toolkit</title>
+    </Helmet>
     <motion.div
       className="max-w-5xl mx-auto p-4 md:p-8 space-y-8"
       initial={{ opacity: 0, y: 30 }}
@@ -100,5 +105,6 @@ export default function ProfilePage() {
         </motion.div>
       </div>
     </motion.div>
+    </>
   );
 }

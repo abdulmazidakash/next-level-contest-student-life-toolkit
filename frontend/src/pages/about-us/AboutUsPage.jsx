@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
 import {
   FaUsers,
   FaLightbulb,
@@ -11,13 +12,17 @@ import {
 
 const AboutUsPage = () => {
   return (
-    <div className="min-h-screen bg-[#FFF9F1] flex flex-col items-center px-4 py-10">
+    <>
+    <Helmet>
+      <title>About Us | Student Toolkit</title>
+    </Helmet>
+    <div className="min-h-screen  flex flex-col items-center px-4 py-10">
       {/* Title Section */}
       <motion.h1
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-3xl md:text-5xl font-bold text-[#317371] mb-6 text-center"
+        className="text-3xl md:text-5xl font-bold text-[#03A9F4] mb-6 text-center"
       >
         About Our App
       </motion.h1>
@@ -29,16 +34,16 @@ const AboutUsPage = () => {
         transition={{ delay: 0.4, duration: 0.8 }}
         className="max-w-3xl text-center text-gray-700 text-base md:text-lg leading-relaxed mb-10"
       >
-        The <strong>Student Toolkit</strong> is designed to make learning and task
+        The <strong className="text-[#03A9F4]">Student Toolkit</strong> is designed to make learning and task
         management seamless. From tracking assignments to accessing resources,
-        everything is built with modern technology to ensure <span className="text-[#317371] font-semibold">speed,
+        everything is built with modern technology to ensure <span className="text-[#03A9F4] font-semibold">speed,
         security, and flexibility</span> across all devices.
       </motion.p>
 
       {/* Features Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full mb-12">
         {/* User Friendly */}
-        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
+        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center border border-gray-100">
           <FaUsers className="text-4xl text-[#F67E04] mb-4" />
           <h3 className="font-semibold text-lg mb-2">User Friendly</h3>
           <p className="text-gray-600 text-center">
@@ -47,7 +52,7 @@ const AboutUsPage = () => {
         </motion.div>
 
         {/* Smart Features */}
-        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
+        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center border border-gray-100">
           <FaLightbulb className="text-4xl text-[#317371] mb-4" />
           <h3 className="font-semibold text-lg mb-2">Smart Features</h3>
           <p className="text-gray-600 text-center">
@@ -56,7 +61,7 @@ const AboutUsPage = () => {
         </motion.div>
 
         {/* Video Guide */}
-        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
+        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center border border-gray-100">
           <FaVideo className="text-4xl text-[#785F54] mb-4" />
           <h3 className="font-semibold text-lg mb-2">Video Guide</h3>
           <p className="text-gray-600 text-center">
@@ -65,7 +70,7 @@ const AboutUsPage = () => {
         </motion.div>
 
         {/* Task Management */}
-        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
+        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center border border-gray-100">
           <FaTasks className="text-4xl text-[#9C27B0] mb-4" />
           <h3 className="font-semibold text-lg mb-2">Task Management</h3>
           <p className="text-gray-600 text-center">
@@ -74,7 +79,7 @@ const AboutUsPage = () => {
         </motion.div>
 
         {/* Security */}
-        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
+        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center border border-gray-100">
           <FaLock className="text-4xl text-[#E91E63] mb-4" />
           <h3 className="font-semibold text-lg mb-2">Secure Access</h3>
           <p className="text-gray-600 text-center">
@@ -83,7 +88,7 @@ const AboutUsPage = () => {
         </motion.div>
 
         {/* Responsive */}
-        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
+        <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center border border-gray-100">
           <FaMobileAlt className="text-4xl text-[#2196F3] mb-4" />
           <h3 className="font-semibold text-lg mb-2">Responsive Design</h3>
           <p className="text-gray-600 text-center">
@@ -106,6 +111,7 @@ const AboutUsPage = () => {
         />
       </motion.div>
     </div>
+    </>
   );
 };
 

@@ -36,6 +36,10 @@ export default function Register() {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>Register | Student Toolkit</title>
+    </Helmet>
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
@@ -99,5 +103,6 @@ export default function Register() {
         <Link to="/" className="btn btn-ghost text-xl text-[#03A9F4]">🎒 Student Toolkit</Link>
       </p>
     </motion.div>
+    </>
   );
 }

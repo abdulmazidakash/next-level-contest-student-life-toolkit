@@ -2,6 +2,7 @@ import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { FaGavel, FaUserShield, FaFileAlt, FaBan, FaExclamationTriangle, FaHandshake } from 'react-icons/fa';
+import { Helmet } from 'react-helmet';
 
 // Animation variants for Framer Motion
 const containerVariants = {
@@ -23,14 +24,18 @@ const sectionVariants = {
 
 const TermsAndConditions = () => {
   return (
+    <>
+    <Helmet>
+      <title>Terms and Conditions | Student Toolkit</title>
+    </Helmet>
     <motion.div
-      className="max-w-4xl mx-auto p-6 bg-base-100 shadow-lg rounded-lg my-8"
+      className="max-w-4xl mx-auto p-6  shadow-lg rounded-lg my-8 border border-gray-100"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      <h1 className="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-2">
-        <FaGavel className="text-primary" /> Terms and Conditions
+      <h1 className="text-3xl font-bold text-center mb-8 flex items-center justify-center gap-2 text-[#03A9F4]">
+        <FaGavel className="text-[#03A9F4]" /> Terms and Conditions
       </h1>
 
       <p className="text-center mb-10 text-gray-600">
@@ -98,6 +103,7 @@ const TermsAndConditions = () => {
         If you have any questions about these Terms and Conditions, please contact us at support@studentlifetoolkit.com.
       </p>
     </motion.div>
+    </>
   );
 };
 

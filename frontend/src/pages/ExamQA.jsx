@@ -3,9 +3,10 @@ import api from "../services/api";
 import Swal from "sweetalert2";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { FaQuestionCircle, FaCheckCircle, FaTimesCircle, FaRedo } from "react-icons/fa";
+import { FaQuestionCircle, FaCheckCircle, FaTimesCircle, FaRedo, FaPenFancy } from "react-icons/fa";
 import Loader from "../components/Loader";
 import { useAuth } from "../context/AuthProvider";
+import { Helmet } from "react-helmet";
 
 const PHI = 1.618;
 
@@ -74,6 +75,21 @@ export default function ExamQA() {
   if (!question) return <Loader />;
 
   return (
+    <>
+    <Helmet>
+      <title>AI Generate Exam Q & A | Student Toolkit</title>
+    </Helmet>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center gap-3 my-6"
+    >
+      <FaPenFancy className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
+      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#03A9F4]">
+        AI Generate Exam Q & A
+      </h1>
+    </motion.div>
     <div className="max-w-4xl mx-auto space-y-6 p-4">
       {/* Stats Section */}
       {stats && (
@@ -83,17 +99,17 @@ export default function ExamQA() {
           transition={{ duration: 0.5 }}
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center"
         >
-          <div className="card bg-base-100 shadow p-4 flex flex-col items-center">
+          <div className="card  shadow p-4 flex flex-col items-center border border-gray-100 hover:shadow-lg">
             <FaCheckCircle className="text-green-500 text-3xl mb-2" />
             <span className="font-bold">{stats.correct}</span>
             <span className="text-sm">Correct</span>
           </div>
-          <div className="card bg-base-100 shadow p-4 flex flex-col items-center">
+          <div className="card  shadow p-4 flex flex-col items-center border border-gray-100 hover:shadow-lg">
             <FaTimesCircle className="text-red-500 text-3xl mb-2" />
             <span className="font-bold">{stats.incorrect}</span>
             <span className="text-sm">Incorrect</span>
           </div>
-          <div className="card bg-base-100 shadow p-4 flex flex-col items-center">
+          <div className="card  shadow p-4 flex flex-col items-center border border-gray-100 hover:shadow-lg">
             <FaQuestionCircle className="text-blue-500 text-3xl mb-2" />
             <span className="font-bold">{stats.totalAnswered}</span>
             <span className="text-sm">Total Answered</span>
@@ -150,7 +166,7 @@ export default function ExamQA() {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="btn btn-secondary w-full md:w-auto"
+        className="btn  w-full md:w-auto bg-[#03A9F4] text-white hover:bg-[#0398DC]"
         onClick={generateQuestion}
         style={{ width: `${100 / PHI}%` }} // Golden ratio button width
       >
@@ -163,7 +179,7 @@ export default function ExamQA() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
-        className="card bg-base-100 shadow-xl p-6"
+        className="card  shadow p-6 border border-gray-100 hover:shadow-lg"
         style={{ aspectRatio: PHI }} // Golden ratio aspect for card
       >
         <div className="flex items-center gap-2 font-bold text-lg mb-4">
@@ -221,7 +237,7 @@ export default function ExamQA() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="btn btn-primary flex-1"
+            className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC] flex-1"
             onClick={handleSubmit}
           >
             Submit Answer
@@ -229,7 +245,7 @@ export default function ExamQA() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="btn btn-outline flex-1"
+            className="btn text-[#03A9F4] border-[#03A9F4] flex-1"
             onClick={generateQuestion}
           >
             Skip to Next
@@ -237,5 +253,6 @@ export default function ExamQA() {
         </div>
       </motion.div>
     </div>
+    </>
   );
 }

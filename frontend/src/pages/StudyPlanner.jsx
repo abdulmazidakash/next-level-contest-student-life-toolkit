@@ -14,6 +14,8 @@ import {
   FiRotateCcw,
   FiTrash2,
 } from "react-icons/fi";
+import { FaTasks } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
 
@@ -167,14 +169,16 @@ export default function StudyPlanner() {
   if (!id) return Swal.fire("Error", "Invalid task ID", "error");
 
   const confirm = await Swal.fire({
-    title: "Delete task?",
-    text: "This action cannot be undone!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete it!",
-  });
+        title: "Are you sure?",
+        text: "Do you want to delete this task?",
+        icon: "warning",
+        showCancelButton: true,
+        background: "#FFF9F1", // alert background
+        color: "#317371",       // text color
+        confirmButtonColor: "#03A9F4", // confirm button background
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      });
 
   if (confirm.isConfirmed) {
     try {
@@ -193,6 +197,21 @@ export default function StudyPlanner() {
 
 
   return (
+    <>
+    <Helmet>
+      <title>My Study Plan | Student Toolkit</title>
+    </Helmet>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center gap-3 my-6"
+    >
+      <FaTasks className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
+      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#03A9F4]">
+        My Study Plan
+      </h1>
+    </motion.div>
     <div className="container mx-auto px-4 py-6 grid gap-8 lg:grid-cols-[1fr_1.618fr]">
       {/* Left: Add Form (golden ratio left pane) */}
       <motion.form
@@ -391,5 +410,6 @@ export default function StudyPlanner() {
         </div>
       </motion.div>
     </div>
+    </>
   );
 }

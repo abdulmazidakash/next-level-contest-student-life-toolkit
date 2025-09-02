@@ -5,6 +5,8 @@ import api from "../services/api";
 import { useAuth } from "../context/AuthProvider";
 import { motion } from "framer-motion";
 import { FiEdit2, FiTrash2, FiSearch, FiPlusCircle } from "react-icons/fi";
+import { FaBookOpen } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 export default function ClassSchedule() {
   const { user } = useAuth();
@@ -89,10 +91,13 @@ export default function ClassSchedule() {
       text: "Do you want to delete this class?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      background: "#FFF9F1", // alert background
+      color: "#317371",       // text color
+      confirmButtonColor: "#03A9F4", // confirm button background
       confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
     });
+
     if (confirm.isConfirmed) {
       await api.delete(`/classes/${id}`);
       Swal.fire("Deleted!", "Class removed", "success");
@@ -106,6 +111,22 @@ export default function ClassSchedule() {
   };
 
   return (
+    
+    <>
+    <Helmet>
+      <title>My Class Schedule | Student Toolkit</title>
+    </Helmet>
+    <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-center gap-3 my-6"
+        >
+          <FaBookOpen className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#03A9F4]">
+            My Class Schedule
+          </h1>
+        </motion.div>
     <div className="container mx-auto px-4 py-6 grid lg:grid-cols-[1fr_1.618fr] gap-8">
       {/* Fixed width form */}
       <motion.form
@@ -160,7 +181,7 @@ export default function ClassSchedule() {
           required
         />
         <input
-          className="input input-bordered w-full"
+          className="input input-bordered w-20"
           type="color"
           value={form.color}
           onChange={(e) => setForm((f) => ({ ...f, color: e.target.value }))}
@@ -279,7 +300,7 @@ export default function ClassSchedule() {
                 }
               />
               <input
-                className="input input-bordered w-full"
+                className="input input-bordered w-20"
                 type="color"
                 value={editForm.color}
                 onChange={(e) =>
@@ -310,5 +331,6 @@ export default function ClassSchedule() {
         </motion.div>
       </dialog>
     </div>
+    </>
   );
 }

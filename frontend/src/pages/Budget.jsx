@@ -9,6 +9,8 @@ import {
 import { FiEdit2, FiFilter, FiTrash2, FiTrendingUp, FiDollarSign, FiPieChart, FiBarChart2 } from "react-icons/fi";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion"; // 🌀 motion import
+import { FaWallet } from "react-icons/fa";
+import { Helmet } from "react-helmet";
 
 const COLORS = ["#22c55e", "#ef4444", "#3b82f6", "#f59e0b", "#8b5cf6"];
 
@@ -65,14 +67,18 @@ export default function Budget() {
   };
 
   const onDelete = async (id) => {
-    const ok = await Swal.fire({
-      title: "Are you sure?",
-      text: "This will remove the item permanently",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-    });
-    if (ok.isConfirmed) {
+    const confirm = await Swal.fire({
+          title: "Are you sure?",
+          text: "Do you want to delete this class?",
+          icon: "warning",
+          showCancelButton: true,
+          background: "#FFF9F1", // alert background
+          color: "#317371",       // text color
+          confirmButtonColor: "#03A9F4", // confirm button background
+          confirmButtonText: "Yes, delete it!",
+          cancelButtonText: "Cancel",
+        });
+    if (confirm.isConfirmed) {
       await api.delete(`/budgets/${id}`);
       Swal.fire("Deleted", "Budget item removed", "success");
       load();
@@ -111,6 +117,21 @@ export default function Budget() {
   }, [list, filter]);
 
   return (
+    <>
+    <Helmet>
+      <title>My Budget Track | Student Toolkit</title>
+    </Helmet>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center gap-3 my-6"
+    >
+      <FaWallet className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
+      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#03A9F4]">
+        My Budget Track
+      </h1>
+    </motion.div>
     <motion.div
       className="space-y-8"
       initial={{ opacity: 0, y: 20 }}
@@ -301,5 +322,6 @@ export default function Budget() {
         )}
       </AnimatePresence>
     </motion.div>
+    </>
   );
 }

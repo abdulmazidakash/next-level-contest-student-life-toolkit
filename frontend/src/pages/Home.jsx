@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { FaCalendarAlt, FaWallet, FaQuestionCircle, FaClipboardList } from 'react-icons/fa';
-
+import { Helmet } from "react-helmet";
 // Animation variants
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -20,6 +20,10 @@ const cardVariants = {
 
 export default function Home() {
   return (
+   <>
+   <Helmet>
+      <title>Home | Student Toolkit</title>
+    </Helmet>
     <div className="">
       {/* Hero Section */}
       <motion.div
@@ -30,7 +34,7 @@ export default function Home() {
       >
         <div>
           <h1 className="text-4xl font-bold mb-4">Make your student life simpler ✨</h1>
-          <p className="mb-6">Track classes, plan studies, manage budget, generate exam questions and stay focused.</p>
+          <p className="mb-6">Track classes, plan studies, manage budget, ai generate exam questions and stay focused.</p>
           <div className="flex gap-3">
             <Link to="/dashboard" className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC]">Open Dashboard</Link>
             <Link to="/about-us" className="btn text-[#03A9F4] border-[#03A9F4]">About Us</Link>
@@ -51,7 +55,7 @@ export default function Home() {
         <h2 className="text-4xl font-bold text-center mb-10">Our Key Features ✨</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <motion.div
-            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center"
+            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center border border-gray-100"
             variants={cardVariants}
           >
             <FaCalendarAlt className="text-4xl text-[#03A9F4] mx-auto mb-4" />
@@ -59,7 +63,7 @@ export default function Home() {
             <p className="text-sm text-gray-600">Add, edit, or delete classes with color coding for easy tracking.</p>
           </motion.div>
           <motion.div
-            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center"
+            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center border border-gray-100"
             variants={cardVariants}
           >
             <FaWallet className="text-4xl text-[#03A9F4] mx-auto mb-4" />
@@ -67,15 +71,15 @@ export default function Home() {
             <p className="text-sm text-gray-600">Manage income, expenses, and savings with visual charts.</p>
           </motion.div>
           <motion.div
-            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center"
+            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center border border-gray-100"
             variants={cardVariants}
           >
             <FaQuestionCircle className="text-4xl text-[#03A9F4] mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">Exam Q&A Generator</h3>
-            <p className="text-sm text-gray-600">Generate practice questions with difficulty levels for exam prep.</p>
+            <p className="text-sm text-gray-600">AI Generate practice questions with difficulty levels for exam prep.</p>
           </motion.div>
           <motion.div
-            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center"
+            className="card bg-base-100 shadow hover:shadow-lg p-6 text-center border border-gray-100"
             variants={cardVariants}
           >
             <FaClipboardList className="text-4xl text-[#03A9F4] mx-auto mb-4" />
@@ -85,5 +89,6 @@ export default function Home() {
         </div>
       </motion.section>
     </div>
+   </>
   );
 }
