@@ -7,7 +7,7 @@ export default function Dashboard(){
     { to: "/budget", title: "Budget Tracker", desc: "Know where money goes" },
     { to: "/planner", title: "Study Planner", desc: "Break big goals" },
     { to: "/exam", title: "Exam Q&A", desc: "Practice makes perfect" },
-    { to: "/focus", title: "Focus Mode", desc: "Pomodoro + block list" },
+    { to: "/weekly-progress", title: "Weekly Progress", desc: "Pomodoro + block list" },
   ];
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

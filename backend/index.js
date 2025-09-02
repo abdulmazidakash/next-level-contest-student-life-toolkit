@@ -14,9 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// MongoDB connection (native driver)
-// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_CLUSTER || 'cluster0.j0hxo.mongodb.net'}/?retryWrites=true&w=majority&appName=StudentLifeToolkit`;
-
+//mongodb uri
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.o1alckr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 const client = new MongoClient(uri, {
@@ -98,6 +96,36 @@ async function run() {
       }
     });
 
+    // GET student profile
+    app.get('/profile/:email', verifyToken, async (req, res) => {
+      try {
+        const email = req.params.email;
+        const user = await usersCol.findOne({ email });
+        if (!user) return res.status(404).send({ message: 'User not found' });
+
+        // Optionally include summary stats
+        const totalClasses = await classesCol.countDocuments({ email });
+        const totalBudgetItems = await budgetsCol.countDocuments({ email });
+        const totalTasks = await plannersCol.countDocuments({ email });
+
+        res.send({
+          email: user.email,
+          name: user.name,
+          photoURL: user.photoURL,
+          role: user.role,
+          createdAt: user.createdAt,
+          stats: {
+            totalClasses,
+            totalBudgetItems,
+            totalTasks
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Failed to fetch profile' });
+      }
+    });
+
     // -----------------------
     // CLASSES (CRUD)
     // -----------------------
@@ -166,8 +194,6 @@ async function run() {
         res.status(500).send({message: 'Server error', error});
       }
     });
-
-
 
     // Delete class
     app.delete('/classes/:id', verifyToken, async (req, res) => {
@@ -240,7 +266,7 @@ async function run() {
     });
 
 
-    // (Optional) delete budget item
+    //delete budget item
     app.delete('/budgets/:id', verifyToken, async (req, res) => {
       try {
         const id = req.params.id;
@@ -293,7 +319,7 @@ async function run() {
       }
     });
 
-    // delete  task
+    // delete study plan task
     app.delete('/planners/:id', verifyToken, async (req, res) => {
       try {
         const id = req.params.id;
@@ -397,35 +423,35 @@ async function run() {
       }
     });
 
-   // -----------------------
-// PROGRESS (Weekly report)
-// -----------------------
-app.get('/progress/:email', verifyToken, async (req, res) => {
-  try {
-    const email = req.params.email;
+    // -----------------------
+    // PROGRESS (Weekly report) -- unique features
+    // -----------------------
+    app.get('/progress/:email', verifyToken, async (req, res) => {
+      try {
+        const email = req.params.email;
 
-    // count classes per day
-    const pipeline = [
-      { $match: { email } },
-      { $group: { _id: "$day", total: { $sum: 1 } } },
-      { $sort: { _id: 1 } }
-    ];
+        // count classes per day
+        const pipeline = [
+          { $match: { email } },
+          { $group: { _id: "$day", total: { $sum: 1 } } },
+          { $sort: { _id: 1 } }
+        ];
 
-    const result = await classesCol.aggregate(pipeline).toArray();
+        const result = await classesCol.aggregate(pipeline).toArray();
 
-    // normalize all 7 days
-    const days = ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"];
-    const mapped = days.map(d => {
-      const found = result.find(r => r._id === d);
-      return { day: d, total: found ? found.total : 0 };
+        // normalize all 7 days
+        const days = ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"];
+        const mapped = days.map(d => {
+          const found = result.find(r => r._id === d);
+          return { day: d, total: found ? found.total : 0 };
+        });
+
+        res.send(mapped);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Failed to fetch progress' });
+      }
     });
-
-    res.send(mapped);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: 'Failed to fetch progress' });
-  }
-});
 
 
 

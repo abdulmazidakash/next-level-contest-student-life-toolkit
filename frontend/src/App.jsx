@@ -9,10 +9,10 @@ import ClassSchedule from "./pages/ClassSchedule";
 import Budget from "./pages/Budget";
 import StudyPlanner from "./pages/StudyPlanner";
 import ExamQA from "./pages/ExamQA";
-import FocusTimer from "./pages/FocusTimer"; // Unique Feature
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
-import WeeklyProgress from "./pages/weekly-progress/WeeklyProgress";
+import WeeklyProgress from "./pages/weekly-progress/WeeklyProgress"; //unique features
+import ProfilePage from "./pages/profile/ProfilePage";
 
 export default function App() {
   return (
@@ -65,18 +65,18 @@ export default function App() {
             }
           />
           <Route
-            path="/focus"
-            element={
-              <ProtectedRoute>
-                <FocusTimer />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path="/weekly-progress"
             element={
               <ProtectedRoute>
                 <WeeklyProgress />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />

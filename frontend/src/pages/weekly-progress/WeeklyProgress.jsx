@@ -72,7 +72,7 @@ export default function WeeklyProgress() {
       </motion.div>
 
       {/* Charts grid */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-1 lg:grid-cols-2 grid-cols-1 gap-6">
         {/* Bar chart */}
         <motion.div
           className="card bg-base-100 shadow p-4 border border-gray-300"

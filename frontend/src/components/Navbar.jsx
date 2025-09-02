@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthProvider";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  console.log(user);
 const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
   const nav = (
     <>
@@ -13,7 +14,6 @@ const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
       <li><NavLink className={linkClass} to="/budget">Budget</NavLink></li>
       <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li>
       <li><NavLink className={linkClass} to="/exam">Exam Q&A</NavLink></li>
-      <li><NavLink className={linkClass} to="/focus">Focus Mode</NavLink></li>
       <li><NavLink className={linkClass} to="/weekly-progress">Weekly Progress</NavLink></li>
     </>
   );
@@ -35,11 +35,14 @@ const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
       <div className="navbar-end gap-2">
         {user?.email ? (
           <>
-            <div className="avatar">
+            <Link title={user?.displayName} to={'/profile'} className="avatar">
               <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                <img src={user.photoURL || "https://i.ibb.co/2y0rPjH/user.png"} />
+                <img 
+                referrerPolicy="no-referrer" 
+                alt={user?.displayName}
+                src={user.photoURL || "https://i.ibb.co/2y0rPjH/user.png"} />
               </div>
-            </div>
+            </Link>
             <button className="btn btn-sm font-semibold text-[#03A9F4] border-[#03A9F4]" onClick={logout}>Logout</button>
           </>
         ) : (
