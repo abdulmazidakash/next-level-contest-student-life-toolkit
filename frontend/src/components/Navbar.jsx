@@ -10,11 +10,14 @@ const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
     <>
       <li><NavLink className={linkClass} to="/">Home</NavLink></li>
       <li><NavLink className={linkClass} to="/dashboard">Dashboard</NavLink></li>
-      <li><NavLink className={linkClass} to="/classes">Classes</NavLink></li>
-      <li><NavLink className={linkClass} to="/budget">Budget</NavLink></li>
+      {/* <li><NavLink className={linkClass} to="/classes">Classes</NavLink></li> */}
+      {/* <li><NavLink className={linkClass} to="/budget">Budget</NavLink></li>
       <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li>
       <li><NavLink className={linkClass} to="/exam">Exam Q&A</NavLink></li>
       <li><NavLink className={linkClass} to="/weekly-progress">Weekly Progress</NavLink></li>
+      <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li> */}
+      <li><NavLink className={linkClass} to="/about-us">About Us</NavLink></li>
+      <li><NavLink className={linkClass} to="/weekly-progress">Contact Us</NavLink></li>
     </>
   );
 

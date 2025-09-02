@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import WeeklyProgress from "./pages/weekly-progress/WeeklyProgress"; //unique features
 import ProfilePage from "./pages/profile/ProfilePage";
+import AboutUsPage from "./pages/about-us/AboutUsPage";
 
 export default function App() {
   return (
@@ -78,6 +79,12 @@ export default function App() {
               <ProtectedRoute>
                 <ProfilePage />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/about-us"
+            element={
+                <AboutUsPage />
             }
           />
 
