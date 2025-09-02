@@ -91,12 +91,19 @@ export default function Budget() {
   ];
 
   const barData = useMemo(() => {
-    const map = {};
-    list.forEach(i => {
-      map[i.label] = (map[i.label] || 0) + i.amount * (i.type === 'expense' ? -1 : 1);
-    });
-    return Object.entries(map).map(([label, value]) => ({ label, value }));
-  }, [list]);
+  const map = {};
+  list.forEach(i => {
+    if (!map[i.label]) {
+      map[i.label] = { label: i.label, income: 0, expense: 0 };
+    }
+    if (i.type === "income") {
+      map[i.label].income += i.amount;
+    } else {
+      map[i.label].expense += i.amount;
+    }
+  });
+  return Object.values(map);
+}, [list]);
 
   const filteredList = useMemo(() => {
     if (filter === "all") return list;
@@ -189,7 +196,9 @@ export default function Budget() {
               <XAxis dataKey="label" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="value" fill="#03A9F4" />
+              <Legend />
+              <Bar dataKey="income" fill="#22c55e" name="Income" />
+              <Bar dataKey="expense" fill="#ef4444" name="Expense" />
             </BarChart>
           </ResponsiveContainer>
         </motion.div>

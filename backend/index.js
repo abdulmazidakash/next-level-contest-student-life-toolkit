@@ -293,6 +293,30 @@ async function run() {
       }
     });
 
+    // delete  task
+    app.delete('/planners/:id', verifyToken, async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        // if id is invalid, ObjectId() will throw
+        if (!ObjectId.isValid(id)) {
+          return res.status(400).send({ message: 'Invalid ID format' });
+        }
+
+        const result = await plannersCol.deleteOne({ _id: new ObjectId(id) });
+
+        if (result.deletedCount === 0) {
+          return res.status(404).send({ message: 'Task not found' });
+        }
+
+        res.send({ success: true, deletedCount: result.deletedCount });
+      } catch (err) {
+        res.status(500).send({ message: 'Failed to delete planner task' });
+      }
+    });
+
+
+
     // -----------------------
     // QUESTIONS (seed + random)
     // -----------------------

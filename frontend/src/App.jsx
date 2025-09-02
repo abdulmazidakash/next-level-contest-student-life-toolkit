@@ -11,6 +11,7 @@ import StudyPlanner from "./pages/StudyPlanner";
 import ExamQA from "./pages/ExamQA";
 import FocusTimer from "./pages/FocusTimer"; // Unique Feature
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./components/NotFound";
 
 export default function App() {
   return (
@@ -71,7 +72,7 @@ export default function App() {
             }
           />
 
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="*" element={<NotFound/>} />
         </Routes>
       </div>
     </div>

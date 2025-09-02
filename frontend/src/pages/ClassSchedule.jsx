@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import api from "../services/api";
 import { useAuth } from "../context/AuthProvider";
 import { motion } from "framer-motion";
-import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiSearch, FiPlusCircle } from "react-icons/fi";
 
 export default function ClassSchedule() {
   const { user } = useAuth();
@@ -115,9 +115,10 @@ export default function ClassSchedule() {
         transition={{ duration: 0.4 }}
         className="card bg-base-100 shadow-xl p-6 rounded-2xl space-y-4 border border-gray-200"
       >
-        <h2 className="text-xl font-bold text-[#03A9F4] text-center">
-          Add Class
-        </h2>
+        <div className="flex items-center gap-2 justify-center">
+          <FiPlusCircle className="text-2xl text-[#03A9F4]" />
+          <h2 className="text-xl font-bold text-[#03A9F4]">New Class Task</h2>
+        </div>
         <input
           className="input input-bordered w-full"
           placeholder="Subject"
@@ -198,7 +199,7 @@ export default function ClassSchedule() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="p-4 rounded-xl shadow-lg bg-white flex flex-col justify-between border border-gray-200"
+              className="p-4 rounded-xl shadow hover:shadow-lg transition bg-white flex flex-col justify-between border border-gray-200"
               style={{ borderLeft: `6px solid ${c.color}` }}
             >
               <div>
