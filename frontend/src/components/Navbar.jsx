@@ -1,21 +1,15 @@
 
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
-
+import { PiStudentDuotone } from "react-icons/pi";
 export default function Navbar() {
   const { user, logout } = useAuth();
   console.log(user);
-const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
+const linkClass = ({ isActive }) => `text-white ${isActive ? "underline" : ""}`;
   const nav = (
     <>
       <li><NavLink className={linkClass} to="/">Home</NavLink></li>
       <li><NavLink className={linkClass} to="/dashboard">Dashboard</NavLink></li>
-      {/* <li><NavLink className={linkClass} to="/classes">Classes</NavLink></li> */}
-      {/* <li><NavLink className={linkClass} to="/budget">Budget</NavLink></li>
-      <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li>
-      <li><NavLink className={linkClass} to="/exam">Exam Q&A</NavLink></li>
-      <li><NavLink className={linkClass} to="/weekly-progress">Weekly Progress</NavLink></li>
-      <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li> */}
       <li><NavLink className={linkClass} to="/about-us">About Us</NavLink></li>
       <li><NavLink className={linkClass} to="/terms-and-conditions">Terms & Conditions</NavLink></li>
     </>
@@ -25,12 +19,16 @@ const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
     <div className="navbar bg-[#03A9F4] backdrop-blur sticky top-0 z-50 text-white font-semibold">
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">☰</div>
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
+            </svg>
+          </div>
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-[#03A9F4] rounded-box w-52">
             {nav}
           </ul>
         </div>
-        <Link to="/" className="btn btn-ghost text-xl">🎒 Student Toolkit</Link>
+        <Link to="/" className="btn btn-ghost text-xl font-bold items-center"><PiStudentDuotone className="font-bold" /> Student Toolkit</Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{nav}</ul>
@@ -58,4 +56,3 @@ const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
     </div>
   );
 }
-

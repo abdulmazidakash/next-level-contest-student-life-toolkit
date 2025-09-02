@@ -15,6 +15,7 @@ import WeeklyProgress from "./pages/weekly-progress/WeeklyProgress"; //unique fe
 import ProfilePage from "./pages/profile/ProfilePage";
 import AboutUsPage from "./pages/about-us/AboutUsPage";
 import TermsAndConditions from "./pages/terms-and-conditions/TermsAndConditions";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -98,6 +99,7 @@ export default function App() {
           <Route path="*" element={<NotFound/>} />
         </Routes>
       </div>
+      <Footer/>
     </div>
   );
 }
