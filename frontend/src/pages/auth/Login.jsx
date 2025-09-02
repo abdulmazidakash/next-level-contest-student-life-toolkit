@@ -6,6 +6,8 @@ import { useAuth } from "../../context/AuthProvider";
 import { motion } from "framer-motion";
 import { MdOutlineAirplaneTicket } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
+import { Helmet } from "react-helmet";
+import { PiStudentDuotone } from "react-icons/pi";
 
 export default function Login() {
   const { loginEmail, loginGoogle } = useAuth();
@@ -45,7 +47,7 @@ export default function Login() {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="max-w-md mx-auto card bg-base-100 shadow-xl p-6 border border-gray-200 rounded-2xl mt-10"
+      className="max-w-md mx-auto card  shadow-xl p-6 my-8 rounded-lg  border border-gray-100 "
     >
       {/* Logo & Title */}
       <div className="flex items-center justify-center gap-2 mb-4">
@@ -95,7 +97,7 @@ export default function Login() {
       </p>
 
       <p className="mt-3 font-bold text-center">
-        <Link to="/" className="btn btn-ghost text-xl text-[#03A9F4]">🎒 Student Toolkit</Link>
+        <Link to="/" className="btn btn-ghost text-xl font-bold items-center text-[#03A9F4]"><PiStudentDuotone className="font-bold" /> Student Toolkit</Link>
       </p>
     </motion.div>
     </>
