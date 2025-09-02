@@ -397,6 +397,38 @@ async function run() {
       }
     });
 
+   // -----------------------
+// PROGRESS (Weekly report)
+// -----------------------
+app.get('/progress/:email', verifyToken, async (req, res) => {
+  try {
+    const email = req.params.email;
+
+    // count classes per day
+    const pipeline = [
+      { $match: { email } },
+      { $group: { _id: "$day", total: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ];
+
+    const result = await classesCol.aggregate(pipeline).toArray();
+
+    // normalize all 7 days
+    const days = ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"];
+    const mapped = days.map(d => {
+      const found = result.find(r => r._id === d);
+      return { day: d, total: found ? found.total : 0 };
+    });
+
+    res.send(mapped);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ message: 'Failed to fetch progress' });
+  }
+});
+
+
+
     // -----------------------
     // Root test route
     // -----------------------

@@ -14,6 +14,7 @@ const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
       <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li>
       <li><NavLink className={linkClass} to="/exam">Exam Q&A</NavLink></li>
       <li><NavLink className={linkClass} to="/focus">Focus Mode</NavLink></li>
+      <li><NavLink className={linkClass} to="/weekly-progress">Weekly Progress</NavLink></li>
     </>
   );
 
