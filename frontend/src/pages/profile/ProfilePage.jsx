@@ -86,7 +86,7 @@ export default function ProfilePage() {
           whileHover={{ scale: 1.05 }}
         >
           <FiCheckCircle className="text-3xl text-[#3b82f6]" />
-          <p className="mt-2 text-gray-700 font-semibold">Tasks</p>
+          <p className="mt-2 text-gray-700 font-semibold">Study Tasks</p>
           <p className="text-2xl font-bold">{profile.stats.totalTasks}</p>
         </motion.div>
 

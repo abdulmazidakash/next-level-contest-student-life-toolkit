@@ -6,7 +6,7 @@ import {
   PieChart, Pie, Cell, Tooltip, Legend,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer
 } from "recharts";
-import { FiEdit2, FiFilter, FiTrash2, FiTrendingUp, FiDollarSign } from "react-icons/fi";
+import { FiEdit2, FiFilter, FiTrash2, FiTrendingUp, FiDollarSign, FiPieChart, FiBarChart2 } from "react-icons/fi";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion"; // 🌀 motion import
 
@@ -169,7 +169,9 @@ export default function Budget() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h3 className="text-lg font-bold mb-2 text-[#03A9F4]">Income vs Expense</h3>
+          <h3 className="text-lg font-bold mb-2 text-[#03A9F4] flex items-center gap-2">
+            <FiPieChart /> Income vs Expense
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie data={pieData} cx="50%" cy="50%" outerRadius={100} dataKey="value">
@@ -189,7 +191,9 @@ export default function Budget() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <h3 className="text-lg font-bold mb-2 text-[#03A9F4]">By Category</h3>
+          <h3 className="text-lg font-bold mb-2 text-[#03A9F4] flex items-center gap-2">
+            <FiBarChart2 /> By Category
+          </h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={barData}>
               <CartesianGrid strokeDasharray="3 3" />
