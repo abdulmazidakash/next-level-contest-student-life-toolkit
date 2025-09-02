@@ -4,16 +4,29 @@ import Swal from "sweetalert2";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { FaQuestionCircle, FaCheckCircle, FaTimesCircle, FaRedo } from "react-icons/fa";
+import Loader from "../components/Loader";
+import { useAuth } from "../context/AuthProvider";
 
-// Golden ratio constant for UI proportions (approx 1.618)
 const PHI = 1.618;
 
 export default function ExamQA() {
+  const {user} = useAuth();
+  console.log(user);
   const [question, setQuestion] = useState(null);
   const [selectedType, setSelectedType] = useState("mcq");
   const [selectedDifficulty, setSelectedDifficulty] = useState("medium");
   const [topic, setTopic] = useState("general knowledge");
   const [userAnswer, setUserAnswer] = useState("");
+  const [stats, setStats] = useState(null);
+
+  const fetchStats = async () => {
+    try {
+      const { data } = await api.get(`/stats/${user?.email}`);
+      setStats(data);
+    } catch (err) {
+      console.error("Failed to fetch stats", err);
+    }
+  };
 
   const generateQuestion = async () => {
     try {
@@ -45,6 +58,9 @@ export default function ExamQA() {
         title: data.isCorrect ? "Correct!" : "Incorrect",
         text: `${data.feedback || ""}\nCorrect Answer: ${data.correctAnswer}`,
       });
+
+      // Refresh stats after answering
+      fetchStats();
     } catch (err) {
       Swal.fire("Error", err.message, "error");
     }
@@ -52,12 +68,40 @@ export default function ExamQA() {
 
   useEffect(() => {
     generateQuestion();
+    fetchStats();
   }, []);
 
-  if (!question) return <div className="text-center">Loading...</div>;
+  if (!question) return <Loader />;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 p-4">
+      {/* Stats Section */}
+      {stats && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center"
+        >
+          <div className="card bg-base-100 shadow p-4 flex flex-col items-center">
+            <FaCheckCircle className="text-green-500 text-3xl mb-2" />
+            <span className="font-bold">{stats.correct}</span>
+            <span className="text-sm">Correct</span>
+          </div>
+          <div className="card bg-base-100 shadow p-4 flex flex-col items-center">
+            <FaTimesCircle className="text-red-500 text-3xl mb-2" />
+            <span className="font-bold">{stats.incorrect}</span>
+            <span className="text-sm">Incorrect</span>
+          </div>
+          <div className="card bg-base-100 shadow p-4 flex flex-col items-center">
+            <FaQuestionCircle className="text-blue-500 text-3xl mb-2" />
+            <span className="font-bold">{stats.totalAnswered}</span>
+            <span className="text-sm">Total Answered</span>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Rest of your existing UI (controls, generate button, question card)... */}
       {/* Controls Section with Golden Ratio proportions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

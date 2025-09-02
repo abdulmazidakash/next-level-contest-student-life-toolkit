@@ -5,7 +5,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const { GoogleGenerativeAI } = require("@google/generative-ai"); 
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const app = express();
@@ -50,6 +50,7 @@ async function run() {
     const budgetsCol = db.collection('budgets');
     const plannersCol = db.collection('planners');
     const questionsCol = db.collection('questions');
+    const statsCol = db.collection("stats");
 
     // -----------------------
     // JWT creation endpoint
@@ -241,63 +242,107 @@ async function run() {
       }
     });
 
-    // Check answer (for a generated question)
+    // Check answer endpoint (robust)
     app.post('/check-answer', verifyToken, async (req, res) => {
-  try {
-    const { id, userAnswer } = req.body;
-    if (!id || !userAnswer) {
-      return res.status(400).send({ message: 'id and userAnswer required' });
-    }
-
-    const question = await questionsCol.findOne({ _id: new ObjectId(id) });
-    if (!question) {
-      return res.status(404).send({ message: 'Question not found' });
-    }
-
-    let isCorrect = false;
-    let feedback = '';
-
-    if (question.type === 'mcq' || question.type === 'tf') {
-      isCorrect = userAnswer.trim().toLowerCase() === question.answer.trim().toLowerCase();
-      return res.send({ isCorrect, correctAnswer: question.answer });
-    }
-
-    if (question.type === 'short') {
       try {
-        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const prompt = `Evaluate if this user answer is correct for the question.\n
-          Question: "${question.question}".\n
-          Correct answer: "${question.answer}".\n
-          User answer: "${userAnswer}".\n
-          Respond with only the raw JSON: {"isCorrect": true/false, "feedback": "brief explanation"}. No markdown or extra text.`;
+        const { id, userAnswer } = req.body;
+        const email = req.decoded.email; // user email from JWT
 
-        const result = await model.generateContent(prompt);
-        let responseText = result.response.text().trim();
-
-        // Clean potential markdown wrappers
-        responseText = responseText.replace(/^```json\n?|```$/g, '').trim();
-
-        let evaluation;
-        try {
-          evaluation = JSON.parse(responseText);
-        } catch (parseErr) {
-          console.error('Parse error evaluating short answer:', parseErr, responseText);
-          return res.status(500).send({ message: 'Failed to parse AI evaluation' });
+        if (!id || !userAnswer) {
+          return res.status(400).send({ message: 'id and userAnswer required' });
         }
 
-        isCorrect = evaluation.isCorrect;
-        feedback = evaluation.feedback || '';
-        return res.send({ isCorrect, feedback, correctAnswer: question.answer });
+        const question = await questionsCol.findOne({ _id: new ObjectId(id) });
+        if (!question) {
+          return res.status(404).send({ message: 'Question not found' });
+        }
+
+        let isCorrect = false;
+        let feedback = '';
+
+        // Utility function to normalize strings
+        const normalize = (str) =>
+          str
+            .toString()
+            .trim()              // remove leading/trailing spaces
+            .replace(/\s+/g, ' ') // replace multiple spaces with one
+            .toLowerCase();      // lowercase
+
+        // MCQ or True/False
+        if (question.type === 'mcq' || question.type === 'tf') {
+          isCorrect = normalize(userAnswer) === normalize(question.answer);
+        }
+
+        // Short Answer (use AI evaluation)
+        if (question.type === 'short') {
+          try {
+            const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+            const prompt = `
+Evaluate if this user answer is correct for the question.
+Question: "${question.question}"
+Correct answer: "${question.answer}"
+User answer: "${userAnswer}"
+Respond only with JSON: {"isCorrect": true/false, "feedback": "brief explanation"}
+No markdown or extra text.
+        `;
+
+            const result = await model.generateContent(prompt);
+            let responseText = result.response.text().trim();
+
+            // Remove potential code block wrappers
+            responseText = responseText.replace(/^```json\n?|```$/g, '').trim();
+
+            const evaluation = JSON.parse(responseText);
+            isCorrect = evaluation.isCorrect;
+            feedback = evaluation.feedback || '';
+          } catch (err) {
+            console.error('AI evaluation failed:', err);
+            return res.status(500).send({ message: 'AI evaluation failed' });
+          }
+        }
+
+        // -----------------------
+        // Update stats collection
+        // -----------------------
+        const update = {
+          $inc: {
+            totalAnswered: 1,
+            correct: isCorrect ? 1 : 0,
+            incorrect: !isCorrect ? 1 : 0,
+          },
+          $setOnInsert: { email },
+        };
+        await statsCol.updateOne({ email }, update, { upsert: true });
+
+        // -----------------------
+        // Send response
+        // -----------------------
+        res.send({
+          isCorrect,
+          feedback,
+          correctAnswer: question.answer,
+        });
+
       } catch (err) {
-        console.error('AI evaluation failed:', err);
-        return res.status(500).send({ message: 'AI evaluation failed' });
+        console.error('check-answer error:', err);
+        res.status(500).send({ message: 'Internal server error' });
       }
-    }
-  } catch (err) {
-    console.error('check-answer error:', err);
-    res.status(500).send({ message: 'Internal server error' });
-  }
-});
+    });
+
+
+
+    // Fetch stats
+    app.get("/stats/:email", verifyToken, async (req, res) => {
+      try {
+        const email = req.params.email;
+        const stats = await statsCol.findOne({ email });
+        res.send(
+          stats || { email, totalAnswered: 0, correct: 0, incorrect: 0 }
+        );
+      } catch (err) {
+        res.status(500).send({ message: "Failed to fetch stats" });
+      }
+    });
 
 
     // -----------------------
@@ -329,7 +374,7 @@ async function run() {
     app.get('/classes/:email', verifyToken, async (req, res) => {
       try {
         const email = req.params.email;
-        const items = await classesCol.find({ email }).sort({ day: 1}).toArray();
+        const items = await classesCol.find({ email }).sort({ day: 1 }).toArray();
         res.send(items);
       } catch (err) {
         res.status(500).send({ message: 'Failed to fetch classes' });
@@ -346,26 +391,26 @@ async function run() {
         console.log('payload:', payload);
 
         // Validate ObjectId
-        if (!ObjectId.isValid(id)) return res.status(400).send({message:'Invalid ID'});
+        if (!ObjectId.isValid(id)) return res.status(400).send({ message: 'Invalid ID' });
 
         // Remove _id from payload if exists
         // if (payload._id) delete payload._id;
 
         // Update only by _id to test
         const result = await classesCol.updateOne(
-          { _id: new ObjectId(id) }, 
+          { _id: new ObjectId(id) },
           { $set: { ...payload, updatedAt: Date.now() } }
         );
 
         console.log('update result:', result);
 
         if (result.matchedCount === 0)
-          return res.status(404).send({message: 'Class not found'});
+          return res.status(404).send({ message: 'Class not found' });
 
-        res.send({success: true, message: 'Class updated successfully'});
+        res.send({ success: true, message: 'Class updated successfully' });
       } catch (error) {
         console.error('Update class error:', error);
-        res.status(500).send({message: 'Server error', error});
+        res.status(500).send({ message: 'Server error', error });
       }
     });
 
@@ -532,7 +577,7 @@ async function run() {
         const result = await classesCol.aggregate(pipeline).toArray();
 
         // normalize all 7 days
-        const days = ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"];
+        const days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
         const mapped = days.map(d => {
           const found = result.find(r => r._id === d);
           return { day: d, total: found ? found.total : 0 };
