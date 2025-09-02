@@ -17,7 +17,7 @@ const linkClass = ({ isActive }) => (isActive ? "underline" : "text-white");
       <li><NavLink className={linkClass} to="/weekly-progress">Weekly Progress</NavLink></li>
       <li><NavLink className={linkClass} to="/planner">Planner</NavLink></li> */}
       <li><NavLink className={linkClass} to="/about-us">About Us</NavLink></li>
-      <li><NavLink className={linkClass} to="/weekly-progress">Contact Us</NavLink></li>
+      <li><NavLink className={linkClass} to="/terms-and-conditions">Terms & Conditions</NavLink></li>
     </>
   );
 

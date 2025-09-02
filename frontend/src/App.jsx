@@ -14,6 +14,7 @@ import NotFound from "./components/NotFound";
 import WeeklyProgress from "./pages/weekly-progress/WeeklyProgress"; //unique features
 import ProfilePage from "./pages/profile/ProfilePage";
 import AboutUsPage from "./pages/about-us/AboutUsPage";
+import TermsAndConditions from "./pages/terms-and-conditions/TermsAndConditions";
 
 export default function App() {
   return (
@@ -85,6 +86,12 @@ export default function App() {
             path="/about-us"
             element={
                 <AboutUsPage />
+            }
+          />
+          <Route
+            path="/terms-and-conditions"
+            element={
+                <TermsAndConditions />
             }
           />
 
