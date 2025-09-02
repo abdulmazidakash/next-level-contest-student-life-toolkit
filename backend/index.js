@@ -5,6 +5,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { GoogleGenerativeAI } = require("@google/generative-ai"); 
+const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -125,6 +127,178 @@ async function run() {
         res.status(500).send({ message: 'Failed to fetch profile' });
       }
     });
+
+    // -----------------------
+    // QUESTIONS (seed + generate with Gemini)
+    // -----------------------
+    // sample question shape:
+    // {
+    // type: 'mcq' | 'short' | 'tf',
+    // question: '...',
+    // options: ['a','b','c','d'] (for mcq/tf),
+    // answer: '...' (for all)
+    // }
+    // Seed sample questions (run once in dev)
+    app.post('/seed-questions', async (req, res) => {
+      try {
+        const sample = [
+          {
+            type: 'mcq',
+            question: 'Which method is used to add an element at the end of an array in JavaScript?',
+            options: ['push()', 'pop()', 'shift()', 'unshift()'],
+            answer: 'push()'
+          },
+          {
+            type: 'mcq',
+            question: 'What does CSS stand for?',
+            options: ['Cascading Style Sheets', 'Computer Style Sheets', 'Creative Style System', 'Coded Style Syntax'],
+            answer: 'Cascading Style Sheets'
+          },
+          {
+            type: 'short',
+            question: 'Write the HTML tag for creating a link.',
+            answer: '<a href=\"...\">...</a>'
+          },
+          {
+            type: 'tf',
+            question: 'The HTTP status code 404 means Not Found.',
+            options: ['true', 'false'],
+            answer: 'true'
+          }
+        ];
+        const result = await questionsCol.insertMany(sample);
+        res.send({ inserted: result.insertedCount });
+      } catch (err) {
+        res.status(500).send({ message: 'Failed to seed questions' });
+      }
+    });
+    // Generate a question using Gemini AI
+    app.post('/generate-question', verifyToken, async (req, res) => {
+      try {
+        const { type, difficulty, topic = 'general knowledge' } = req.body;
+        if (!type || !difficulty) {
+          return res.status(400).send({ message: 'type and difficulty required' });
+        }
+        if (!['mcq', 'short', 'tf'].includes(type)) {
+          return res.status(400).send({ message: 'Invalid type: mcq, short, or tf' });
+        }
+        if (!['easy', 'medium', 'hard'].includes(difficulty)) {
+          return res.status(400).send({ message: 'Invalid difficulty: easy, medium, or hard' });
+        }
+        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+        let prompt = `Generate a ${difficulty} ${type.toUpperCase()} question on ${topic}. `;
+        prompt += 'Output only the raw JSON object, without any markdown, code blocks, or additional text. ';
+        if (type === 'mcq') {
+          prompt += 'Provide 4 options (A, B, C, D) with one correct. JSON format: {"question": "...", "options": ["A", "B", "C", "D"], "answer": "A"}';
+        } else if (type === 'tf') {
+          prompt += 'Provide true/false question. JSON format: {"question": "...", "options": ["true", "false"], "answer": "true"}';
+        } else if (type === 'short') {
+          prompt += 'Provide a short answer question with a sample answer. JSON format: {"question": "...", "answer": "..."}';
+        }
+        prompt += ' Ensure the JSON is valid and complete.';
+        const result = await model.generateContent(prompt);
+        let responseText = result.response.text().trim();
+        // Strip any potential markdown code blocks
+        responseText = responseText.replace(/^```json\n?|\n?```$/g, '').trim();
+        // Parse JSON from response
+        let generated;
+        try {
+          generated = JSON.parse(responseText);
+        } catch (parseErr) {
+          console.error('Parse error:', parseErr, responseText);
+          return res.status(500).send({ message: 'Failed to parse AI response' });
+        }
+        // For tf, ensure options if missing
+        if (type === 'tf' && !generated.options) {
+          generated.options = ['true', 'false'];
+        }
+        // Store in DB for history if needed
+        const insertResult = await questionsCol.insertOne({
+          ...generated,
+          type,
+          difficulty,
+          topic,
+          createdAt: Date.now(),
+        });
+        // Return without answer for client
+        const { answer, ...clientPayload } = generated;
+        res.send({ ...clientPayload, id: insertResult.insertedId, type, difficulty, topic });
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Failed to generate question' });
+      }
+    });
+
+    // (Optional) Add single question (admin)
+    app.post('/questions', verifyToken, async (req, res) => {
+      try {
+        const payload = req.body;
+        if (!payload.type || !payload.question) return res.status(400).send({ message: 'type and question required' });
+        const result = await questionsCol.insertOne({ ...payload, createdAt: Date.now() });
+        res.send(result);
+      } catch (err) {
+        res.status(500).send({ message: 'Failed to add question' });
+      }
+    });
+
+    // Check answer (for a generated question)
+    app.post('/check-answer', verifyToken, async (req, res) => {
+  try {
+    const { id, userAnswer } = req.body;
+    if (!id || !userAnswer) {
+      return res.status(400).send({ message: 'id and userAnswer required' });
+    }
+
+    const question = await questionsCol.findOne({ _id: new ObjectId(id) });
+    if (!question) {
+      return res.status(404).send({ message: 'Question not found' });
+    }
+
+    let isCorrect = false;
+    let feedback = '';
+
+    if (question.type === 'mcq' || question.type === 'tf') {
+      isCorrect = userAnswer.trim().toLowerCase() === question.answer.trim().toLowerCase();
+      return res.send({ isCorrect, correctAnswer: question.answer });
+    }
+
+    if (question.type === 'short') {
+      try {
+        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const prompt = `Evaluate if this user answer is correct for the question.\n
+          Question: "${question.question}".\n
+          Correct answer: "${question.answer}".\n
+          User answer: "${userAnswer}".\n
+          Respond with only the raw JSON: {"isCorrect": true/false, "feedback": "brief explanation"}. No markdown or extra text.`;
+
+        const result = await model.generateContent(prompt);
+        let responseText = result.response.text().trim();
+
+        // Clean potential markdown wrappers
+        responseText = responseText.replace(/^```json\n?|```$/g, '').trim();
+
+        let evaluation;
+        try {
+          evaluation = JSON.parse(responseText);
+        } catch (parseErr) {
+          console.error('Parse error evaluating short answer:', parseErr, responseText);
+          return res.status(500).send({ message: 'Failed to parse AI evaluation' });
+        }
+
+        isCorrect = evaluation.isCorrect;
+        feedback = evaluation.feedback || '';
+        return res.send({ isCorrect, feedback, correctAnswer: question.answer });
+      } catch (err) {
+        console.error('AI evaluation failed:', err);
+        return res.status(500).send({ message: 'AI evaluation failed' });
+      }
+    }
+  } catch (err) {
+    console.error('check-answer error:', err);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+});
+
 
     // -----------------------
     // CLASSES (CRUD)
@@ -338,88 +512,6 @@ async function run() {
         res.send({ success: true, deletedCount: result.deletedCount });
       } catch (err) {
         res.status(500).send({ message: 'Failed to delete planner task' });
-      }
-    });
-
-
-
-    // -----------------------
-    // QUESTIONS (seed + random)
-    // -----------------------
-    // sample question shape:
-    // {
-    //   type: 'mcq' | 'short' | 'tf',
-    //   question: '...',
-    //   options: ['a','b','c','d'] (for mcq),
-    //   answer: '...'   (optional for backend; not necessary to send to frontend)
-    // }
-
-    // Seed sample questions (run once in dev)
-    app.post('/seed-questions', async (req, res) => {
-      try {
-        const sample = [
-          {
-            type: 'mcq',
-            question: 'Which method is used to add an element at the end of an array in JavaScript?',
-            options: ['push()', 'pop()', 'shift()', 'unshift()'],
-            answer: 'push()'
-          },
-          {
-            type: 'mcq',
-            question: 'What does CSS stand for?',
-            options: ['Cascading Style Sheets', 'Computer Style Sheets', 'Creative Style System', 'Coded Style Syntax'],
-            answer: 'Cascading Style Sheets'
-          },
-          {
-            type: 'short',
-            question: 'Write the HTML tag for creating a link.',
-            answer: '<a href=\"...\">...</a>'
-          },
-          {
-            type: 'tf',
-            question: 'The HTTP status code 404 means Not Found.',
-            options: ['true', 'false'],
-            answer: 'true'
-          }
-        ];
-        const result = await questionsCol.insertMany(sample);
-        res.send({ inserted: result.insertedCount });
-      } catch (err) {
-        res.status(500).send({ message: 'Failed to seed questions' });
-      }
-    });
-
-    // Get a random question
-    app.get('/questions/random', async (req, res) => {
-      try {
-        const count = await questionsCol.countDocuments();
-        console.log('server side response:--->', count);
-        if (count === 0) return res.status(404).send({ message: 'No questions yet. Run /seed-questions' });
-        const rnd = Math.floor(Math.random() * count);
-        const q = await questionsCol.find().skip(rnd).limit(1).toArray();
-        // Don't send answer field if you want users to solve; but front-end for practice may not need it.
-        const question = q[0] || null;
-        if (question) {
-          // remove answer before sending to client (so they won't see correct answer)
-          const { answer, ...payload } = question;
-          res.send(payload);
-        } else {
-          res.status(404).send({ message: 'Question not found' });
-        }
-      } catch (err) {
-        res.status(500).send({ message: 'Failed to fetch question' });
-      }
-    });
-
-    // (Optional) Add single question (admin)
-    app.post('/questions', verifyToken, async (req, res) => {
-      try {
-        const payload = req.body;
-        if (!payload.type || !payload.question) return res.status(400).send({ message: 'type and question required' });
-        const result = await questionsCol.insertOne({ ...payload, createdAt: Date.now() });
-        res.send(result);
-      } catch (err) {
-        res.status(500).send({ message: 'Failed to add question' });
       }
     });
 
