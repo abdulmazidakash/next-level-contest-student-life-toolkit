@@ -50,16 +50,6 @@ This application helps students manage their **class schedules, budget, study pl
 
 ---
 
-### 5. Additional Unique Features
-- **AI Smart Suggestions:** Recommends study priorities and budget adjustments.
-- **Dark Mode & Custom Themes:** Comfortable viewing for long study sessions.
-- **Progress Reports & Analytics:** See your weekly productivity and spending trends.
-- **Notifications & Reminders:** Alerts for upcoming classes, deadlines, and tasks.
-- **Offline Data Support:** Some features work offline, syncing automatically.
-- **Export Data:** Export class schedules, budgets, or study plans to PDF/CSV.
-
----
-
 ## 🖥️ Tech Stack
 
 **Frontend**
@@ -76,7 +66,7 @@ This application helps students manage their **class schedules, budget, study pl
 - RESTful APIs
 
 **AI Features**
-- OpenAI / Generative AI API for exam question generation
+- Generative AI API for exam question generation
 
 ---
 
