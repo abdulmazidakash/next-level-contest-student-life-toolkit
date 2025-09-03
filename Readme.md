@@ -142,10 +142,11 @@ npm install
 4. Setup Environment Variables
 
 ```env
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-OPENAI_API_KEY=your_openai_key
 PORT=5000
+DB_USER=your_database_user
+DB_PASS=your_database_pass
+ACCESS_TOKEN_SECRET=your_jwt_secret
+GEMINI_API_KEY=your_openai_key
 ```
 
 5. Run the Application
@@ -164,26 +165,21 @@ npm start
 
 ## 📷 Screenshots
 
-*(Add screenshots here with descriptions)*
-
-* Dashboard Overview
-* Class Schedule Tracker
-* Budget Tracker with Charts
-* Study Planner Task View
-* AI Exam Q\&A Generator
+![Student Toolkit](/screencapture-student-life-toolkit.png)
 
 ---
 
 ## 🌐 Deployment
 
-* **Frontend:** Vercel / Netlify
-* **Backend:** Render / Heroku
+* **Backend:** [Vercel Link](https://student-toolkit-backend.vercel.app)
+* **Frontend:** [Firebase Link](https://student-life-toolkit-4462d.web.app)
+* **Frontend:** [Netlify Link](https://student-toolkit-akash.netlify.app)
 
 ---
 
 ## 🎥 Presentation Video
 
-* [Watch Here](#) – 5–10 minutes explanation of features and walkthrough.
+* [Watch Here](https://drive.google.com/file/d/your-file-id/view?usp=sharing) – 5–10 minutes explanation of features and walkthrough.
 
 ---
 
