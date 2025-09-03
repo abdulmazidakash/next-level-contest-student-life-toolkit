@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-import { FaBookOpen, FaWallet, FaTasks, FaPenFancy, FaChartLine } from "react-icons/fa";
+import { FaBookOpen, FaWallet, FaTasks, FaPenFancy, FaChartLine, FaChalkboardTeacher } from "react-icons/fa";
 import { Helmet } from "react-helmet";
 
 export default function Dashboard() {
@@ -10,7 +10,7 @@ export default function Dashboard() {
     { to: "/dashboard/budget-tracking", title: "Budget Tracker", desc: "Know where money goes", icon: <FaWallet /> },
     { to: "/dashboard/study-planner", title: "Study Planner", desc: "Break big goals", icon: <FaTasks /> },
     { to: "/dashboard/exam-q-and-a", title: "Exam Q&A", desc: "Practice makes perfect", icon: <FaPenFancy /> },
-    { to: "/dashboard/weekly-progress", title: "Weekly Progress", desc: "Pomodoro + block list", icon: <FaChartLine /> },
+    { to: "/dashboard/weekly-progress", title: "Weekly Progress", desc: "Know daily and weekly class", icon: <FaChartLine /> },
   ];
 
   return (
@@ -24,7 +24,7 @@ export default function Dashboard() {
       transition={{ duration: 0.5 }}
       className="flex items-center justify-center gap-3 my-6"
     >
-      <FaPenFancy className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
+      <FaChalkboardTeacher className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
       <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#03A9F4]">
         Student Dashboard
       </h1>
