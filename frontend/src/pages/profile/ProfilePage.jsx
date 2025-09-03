@@ -9,8 +9,10 @@ import { Helmet } from "react-helmet";
 
 export default function ProfilePage() {
   const { user } = useAuth();
+  console.log(user);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  console.log(profile);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -51,15 +53,15 @@ export default function ProfilePage() {
         transition={{ duration: 0.5 }}
       >
         <img
-		 referrerPolicy="no-referrer" 
+		      referrerPolicy="no-referrer" 
           src={profile.photoURL || "https://i.pravatar.cc/150?img=3"}
-          alt={profile.name}
+          alt={profile.displayName}
           className="w-32 h-32 md:w-48 md:h-48 rounded-full object-cover border-2 border-[#FFD700]"
         />
         <div className="flex-1 space-y-4">
-          <h2 className="text-3xl font-bold text-[#03A9F4]">{profile.name}</h2>
-          <p className="text-gray-600">Email: {profile.email}</p>
-          <p className="text-gray-600">Role: {profile.role}</p>
+          <h2 className="text-3xl font-bold text-[#03A9F4]">{user?.displayName}</h2>
+          <p className="text-gray-600">Email: {profile?.email}</p>
+          <p className="text-gray-600">Role: {profile?.role}</p>
           <p className="text-gray-600">
             Joined: {new Date(profile.createdAt).toLocaleDateString()}
           </p>

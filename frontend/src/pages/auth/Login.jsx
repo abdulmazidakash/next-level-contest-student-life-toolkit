@@ -8,9 +8,10 @@ import { MdOutlineAirplaneTicket } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { Helmet } from "react-helmet";
 import { PiStudentDuotone } from "react-icons/pi";
+import Loader from "../../components/Loader";
 
 export default function Login() {
-  const { loginEmail, loginGoogle } = useAuth();
+  const { loginEmail, loginGoogle, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const navigate = useNavigate();
@@ -37,6 +38,8 @@ export default function Login() {
       Swal.fire("Oops", err.message, "error");
     }
   };
+
+  if(loading) return <Loader/>;
 
   return (
     <>

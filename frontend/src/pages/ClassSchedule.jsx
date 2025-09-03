@@ -69,8 +69,8 @@ export default function ClassSchedule() {
       if (!editForm || !editForm._id) {
         return Swal.fire("Error", "No class selected for update", "error");
       }
-      const payload = { ...editForm, email: user.email };
-      const { data } = await api.put(`/classes/${editForm._id}`, payload);
+      const payload = { ...editForm, email: user?.email };
+      const { data } = await api.put(`/classes/${editForm?._id}`, payload);
       if (data?.success) {
         Swal.fire("Updated", data.message, "success");
         setEditForm(null);

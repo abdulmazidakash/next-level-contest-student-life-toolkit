@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../../context/AuthProvider";
 // eslint-disable-next-line no-unused-vars
@@ -8,20 +8,23 @@ import { MdOutlineAirplaneTicket } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { Helmet } from "react-helmet";
 import { PiStudentDuotone } from "react-icons/pi";
+import Loader from "../../components/Loader";
 
 export default function Register() {
-  const { registerEmail, loginGoogle } = useAuth();
+  const { registerEmail, loginGoogle, loading } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const navigate = useNavigate();
+    const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
       await registerEmail(email, pass, name);
       Swal.fire("Account created", "Welcome aboard!", "success");
-      navigate("/dashboard");
+      navigate(from, { replace: true });
     } catch (err) {
       Swal.fire("Oops", err.message, "error");
     }
@@ -31,11 +34,12 @@ export default function Register() {
     try {
       await loginGoogle();
       Swal.fire("Welcome", "Registered with Google", "success");
-      navigate("/dashboard");
+      navigate(from, { replace: true });
     } catch (err) {
       Swal.fire("Oops", err.message, "error");
     }
   };
+  if(loading) return <Loader/>;
 
   return (
     <>

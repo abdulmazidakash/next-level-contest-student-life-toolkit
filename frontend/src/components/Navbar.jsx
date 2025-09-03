@@ -41,7 +41,7 @@ const linkClass = ({ isActive }) => `text-white ${isActive ? "underline" : ""}`;
                 <img 
                 referrerPolicy="no-referrer" 
                 alt={user?.displayName}
-                src={user.photoURL || "https://i.ibb.co/2y0rPjH/user.png"} />
+                src={user?.photoURL || "https://i.ibb.co/2y0rPjH/user.png"} />
               </div>
             </Link>
             <button className="btn btn-sm font-semibold text-[#03A9F4] border-[#03A9F4]" onClick={logout}>Logout</button>

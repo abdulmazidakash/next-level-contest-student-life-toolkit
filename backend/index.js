@@ -242,68 +242,96 @@ async function run() {
       }
     });
 
-    // Check answer endpoint (robust)
-    app.post('/check-answer', verifyToken, async (req, res) => {
+    // ✅ Check Answer endpoint with debug logs
+    app.post("/check-answer", verifyToken, async (req, res) => {
       try {
         const { id, userAnswer } = req.body;
-        const email = req.decoded.email; // user email from JWT
+        const email = req.decoded.email; // from JWT
+
+        console.log("➡️ Incoming check-answer request:", { id, userAnswer, email });
 
         if (!id || !userAnswer) {
-          return res.status(400).send({ message: 'id and userAnswer required' });
+          console.warn("⚠️ Missing fields in request body");
+          return res.status(400).send({ message: "id and userAnswer required" });
+        }
+
+        // validate ObjectId
+        if (!ObjectId.isValid(id)) {
+          console.warn("⚠️ Invalid question ID:", id);
+          return res.status(400).send({ message: "Invalid question ID" });
         }
 
         const question = await questionsCol.findOne({ _id: new ObjectId(id) });
         if (!question) {
-          return res.status(404).send({ message: 'Question not found' });
+          console.warn("⚠️ Question not found for ID:", id);
+          return res.status(404).send({ message: "Question not found" });
         }
+
+        console.log("✅ Found question:", {
+          type: question.type,
+          question: question.question,
+          answer: question.answer,
+        });
 
         let isCorrect = false;
-        let feedback = '';
+        let feedback = "";
 
-        // Utility function to normalize strings
+        // Utility function to normalize text
         const normalize = (str) =>
-          str
-            .toString()
-            .trim()              // remove leading/trailing spaces
-            .replace(/\s+/g, ' ') // replace multiple spaces with one
-            .toLowerCase();      // lowercase
+          str?.toString().trim().replace(/\s+/g, " ").toLowerCase();
+            if (question.type === "mcq") {
+              console.log("📝 Checking MCQ...");
+              // For MCQ, question.answer should also be key ('A','B', etc.)
+              isCorrect = normalize(userAnswer) === normalize(question.answer);
+              console.log("👉 User:", normalize(userAnswer), "| Correct:", normalize(question.answer), "| Match:", isCorrect);
+            }
 
-        // MCQ or True/False
-        if (question.type === 'mcq' || question.type === 'tf') {
-          isCorrect = normalize(userAnswer) === normalize(question.answer);
-        }
+            if (question.type === "tf") {
+              console.log("📝 Checking True/False...");
+              // Map userAnswer key to actual TF value
+              // Assume options array is ['True', 'False'], key 'A' → True, 'B' → False
+              const index = userAnswer.toUpperCase().charCodeAt(0) - 65; // 'A' -> 0
+              const selectedValue = question.options[index]; // e.g., 'True' or 'False'
+              isCorrect = normalize(selectedValue) === normalize(question.answer);
+              console.log("👉 User TF:", selectedValue, "| Correct:", question.answer, "| Match:", isCorrect);
+            }
 
-        // Short Answer (use AI evaluation)
-        if (question.type === 'short') {
+
+        // ✅ Short Answer → AI-assisted evaluation
+        if (question.type === "short") {
+          console.log("🤖 Checking Short Answer with AI...");
           try {
             const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
             const prompt = `
-Evaluate if this user answer is correct for the question.
-Question: "${question.question}"
-Correct answer: "${question.answer}"
-User answer: "${userAnswer}"
-Respond only with JSON: {"isCorrect": true/false, "feedback": "brief explanation"}
-No markdown or extra text.
-        `;
+    Evaluate if this user answer is correct for the question.
+    Question: "${question.question}"
+    Correct answer: "${question.answer}"
+    User answer: "${userAnswer}"
+    Respond only with JSON: {"isCorrect": true/false, "feedback": "brief explanation"}
+    No markdown or extra text.`;
+
+            console.log("📤 Sending prompt to AI:", prompt);
 
             const result = await model.generateContent(prompt);
             let responseText = result.response.text().trim();
 
+            console.log("📥 Raw AI response:", responseText);
+
             // Remove potential code block wrappers
-            responseText = responseText.replace(/^```json\n?|```$/g, '').trim();
+            responseText = responseText.replace(/^```json\n?|```$/g, "").trim();
 
             const evaluation = JSON.parse(responseText);
             isCorrect = evaluation.isCorrect;
-            feedback = evaluation.feedback || '';
+            feedback = evaluation.feedback || "";
+
+            console.log("✅ Parsed AI evaluation:", { isCorrect, feedback });
           } catch (err) {
-            console.error('AI evaluation failed:', err);
-            return res.status(500).send({ message: 'AI evaluation failed' });
+            console.error("❌ AI evaluation failed:", err);
+            return res.status(500).send({ message: "AI evaluation failed" });
           }
         }
 
-        // -----------------------
-        // Update stats collection
-        // -----------------------
+        // ✅ Update stats collection
         const update = {
           $inc: {
             totalAnswered: 1,
@@ -312,22 +340,28 @@ No markdown or extra text.
           },
           $setOnInsert: { email },
         };
+
+        console.log("📊 Updating stats:", update);
+
         await statsCol.updateOne({ email }, update, { upsert: true });
 
-        // -----------------------
-        // Send response
-        // -----------------------
-        res.send({
+        // ✅ Final response
+        const response = {
           isCorrect,
           feedback,
           correctAnswer: question.answer,
-        });
+        };
 
+        console.log("✅ Sending final response:", response);
+
+        res.send(response);
       } catch (err) {
-        console.error('check-answer error:', err);
-        res.status(500).send({ message: 'Internal server error' });
+        console.error("❌ check-answer error:", err);
+        res.status(500).send({ message: "Internal server error" });
       }
     });
+
+
 
 
 
@@ -387,14 +421,14 @@ No markdown or extra text.
         const id = req.params.id;
         const payload = req.body;
 
-        console.log('update id:', id);
-        console.log('payload:', payload);
+        // console.log('update class id:--->', id);
+        // console.log('class payload:--->', payload);
 
         // Validate ObjectId
         if (!ObjectId.isValid(id)) return res.status(400).send({ message: 'Invalid ID' });
 
         // Remove _id from payload if exists
-        // if (payload._id) delete payload._id;
+        if (payload._id) delete payload._id;
 
         // Update only by _id to test
         const result = await classesCol.updateOne(
@@ -402,7 +436,7 @@ No markdown or extra text.
           { $set: { ...payload, updatedAt: Date.now() } }
         );
 
-        console.log('update result:', result);
+        // console.log('update class result:--->', result);
 
         if (result.matchedCount === 0)
           return res.status(404).send({ message: 'Class not found' });
