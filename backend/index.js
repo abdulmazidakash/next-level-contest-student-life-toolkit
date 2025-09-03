@@ -279,22 +279,30 @@ async function run() {
         // Utility function to normalize text
         const normalize = (str) =>
           str?.toString().trim().replace(/\s+/g, " ").toLowerCase();
-            if (question.type === "mcq") {
-              console.log("📝 Checking MCQ...");
-              // For MCQ, question.answer should also be key ('A','B', etc.)
-              isCorrect = normalize(userAnswer) === normalize(question.answer);
-              console.log("👉 User:", normalize(userAnswer), "| Correct:", normalize(question.answer), "| Match:", isCorrect);
-            }
 
-            if (question.type === "tf") {
-              console.log("📝 Checking True/False...");
-              // Map userAnswer key to actual TF value
-              // Assume options array is ['True', 'False'], key 'A' → True, 'B' → False
-              const index = userAnswer.toUpperCase().charCodeAt(0) - 65; // 'A' -> 0
-              const selectedValue = question.options[index]; // e.g., 'True' or 'False'
-              isCorrect = normalize(selectedValue) === normalize(question.answer);
-              console.log("👉 User TF:", selectedValue, "| Correct:", question.answer, "| Match:", isCorrect);
-            }
+        // ✅ MCQ or True/False → direct string check
+        if (question.type === "mcq" || question.type === "tf") {
+          console.log("📝 Checking MCQ/TF...");
+          isCorrect = normalize(userAnswer) === normalize(question.answer);
+          console.log("👉 User:", normalize(userAnswer), "| Correct:", normalize(question.answer), "| Match:", isCorrect);
+        }
+        // ✅ MCQ or True/False → map key to value if TF
+// if (question.type === "mcq") {
+//   console.log("📝 Checking MCQ...");
+//   // For MCQ, question.answer should also be key ('A','B', etc.)
+//   isCorrect = normalize(userAnswer) === normalize(question.answer);
+//   console.log("👉 User:", normalize(userAnswer), "| Correct:", normalize(question.answer), "| Match:", isCorrect);
+// }
+
+// if (question.type === "tf") {
+//   console.log("📝 Checking True/False...");
+//   // Map userAnswer key to actual TF value
+//   // Assume options array is ['True', 'False'], key 'A' → True, 'B' → False
+//   const index = userAnswer.toUpperCase().charCodeAt(0) - 65; // 'A' -> 0
+//   const selectedValue = question.options[index]; // e.g., 'True' or 'False'
+//   isCorrect = normalize(selectedValue) === normalize(question.answer);
+//   console.log("👉 User TF:", selectedValue, "| Correct:", question.answer, "| Match:", isCorrect);
+// }
 
 
         // ✅ Short Answer → AI-assisted evaluation
