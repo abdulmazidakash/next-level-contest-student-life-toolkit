@@ -66,7 +66,7 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <motion.li variants={linkVariants} whileHover="hover">
               <a href="mailto:support@studentlifetoolkit.com" className="flex items-center gap-2 hover:text-[#03A9F4]">
-                <FaEnvelope /> support@studentlifetoolkit.com
+                <FaEnvelope /> support@studenttoolkit.com
               </a>
             </motion.li>
             <motion.li variants={linkVariants} whileHover="hover">
@@ -99,7 +99,7 @@ const Footer = () => {
 
       {/* Copyright */}
       <div className="mt-8 text-center text-sm border-t border-base-content/20 pt-4">
-        © {new Date().getFullYear()} Student Life Toolkit. All rights reserved.
+        © {new Date().getFullYear()} Student Toolkit. All rights reserved.
       </div>
     </motion.footer>
   );

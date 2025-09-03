@@ -10,6 +10,7 @@ import api from "../../services/api";
 import { useAuth } from "../../context/AuthProvider";
 import { FaChartLine } from "react-icons/fa";
 import { Helmet } from "react-helmet";
+import Loader from "../../components/Loader";
 
 const COLORS = ["#22c55e", "#ef4444", "#3b82f6", "#f59e0b", "#8b5cf6", "#14b8a6", "#f97316"];
 
@@ -44,7 +45,7 @@ export default function WeeklyProgress() {
   }, [data, totals]);
 
   if (loading) {
-    return <div className="text-center py-10">Loading...</div>;
+    return <Loader/>;
   }
 
   if (!data.length) {

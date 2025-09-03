@@ -54,7 +54,7 @@ const AboutUsPage = () => {
         {/* Smart Features */}
         <motion.div whileHover={{ scale: 1.05 }} className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center border border-gray-100">
           <FaLightbulb className="text-4xl text-[#317371] mb-4" />
-          <h3 className="font-semibold text-lg mb-2">Smart Features</h3>
+          <h3 className="font-semibold text-lg mb-2">Smart AI Features</h3>
           <p className="text-gray-600 text-center">
             AI-powered tools to save your time and enhance productivity.
           </p>

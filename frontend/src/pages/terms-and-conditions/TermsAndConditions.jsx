@@ -39,7 +39,7 @@ const TermsAndConditions = () => {
       </h1>
 
       <p className="text-center mb-10 text-gray-600">
-        Welcome to Student Life Toolkit. These terms and conditions outline the rules and regulations for the use of our website and services. By accessing this website, we assume you accept these terms and conditions. Do not continue to use Student Life Toolkit if you do not agree to all of the terms and conditions stated on this page.
+        Welcome to Student Toolkit. These terms and conditions outline the rules and regulations for the use of our website and services. By accessing this website, we assume you accept these terms and conditions. Do not continue to use Student Life Toolkit if you do not agree to all of the terms and conditions stated on this page.
       </p>
 
       <motion.section variants={sectionVariants} className="mb-8">
@@ -77,7 +77,7 @@ const TermsAndConditions = () => {
           <FaExclamationTriangle className="text-yellow-500" /> 4. Limitation of Liability
         </h2>
         <p className="text-gray-700">
-          Student Life Toolkit is provided "as is" without any warranties. We are not liable for any damages arising from the use of the app, including loss of data or inaccuracies in generated content. Use at your own risk.
+          Student Toolkit is provided "as is" without any warranties. We are not liable for any damages arising from the use of the app, including loss of data or inaccuracies in generated content. Use at your own risk.
         </p>
       </motion.section>
 
@@ -100,7 +100,7 @@ const TermsAndConditions = () => {
       </motion.section>
 
       <p className="text-center text-gray-600 mt-10">
-        If you have any questions about these Terms and Conditions, please contact us at support@studentlifetoolkit.com.
+        If you have any questions about these Terms and Conditions, please contact us at support@studenttoolkit.com.
       </p>
     </motion.div>
     </>
