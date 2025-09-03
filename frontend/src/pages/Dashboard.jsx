@@ -18,6 +18,17 @@ export default function Dashboard() {
     <Helmet>
       <title>Dashboard | Student Toolkit</title>
     </Helmet>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center gap-3 my-6"
+    >
+      <FaPenFancy className="text-[#03A9F4] text-3xl sm:text-4xl md:text-5xl" />
+      <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#03A9F4]">
+        Student Dashboard
+      </h1>
+    </motion.div>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full my-8">
       {cards.map((c, i) => (
         <motion.div
