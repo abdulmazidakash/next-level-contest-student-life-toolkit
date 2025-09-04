@@ -105,7 +105,7 @@ const AboutUsPage = () => {
         className="w-full max-w-4xl aspect-video shadow-lg rounded-2xl overflow-hidden"
       >
         <iframe
-          src="https://drive.google.com/file/d/1BMk6ds1olurtu-VKk-2Wj5vwVJsda0Gz/preview"
+          src="https://drive.google.com/file/d/1RCB5Sy8N84IszuYtDM4dYEBGmmxLDpBd/preview"
           className="w-full h-full"
           allow="autoplay; fullscreen"
         />
