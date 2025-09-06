@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../../context/AuthProvider";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
 import { PiStudentDuotone } from "react-icons/pi";
