@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import Swal from "sweetalert2";
 import api from "../services/api";
@@ -225,27 +226,66 @@ export default function StudyPlanner() {
         </h1>
       </motion.div>
       <div className="container mx-auto px-4 py-6">
-        {/* Add Task Button */}
-        <div className="mb-6 text-center">
-          <button
-            className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC] flex items-center gap-2"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <FiPlusCircle className="text-xl animate-pulse" /> <span className="animate-pulse">Add New Task</span>
-          </button>
-        </div>
+        {/* Add Task Button and Search & Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="card bg-base-100 shadow p-4 rounded-lg border border-gray-200 mb-6"
+        >
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
+            <button
+              className="btn btn-sm lg:btn-md bg-[#03A9F4] text-white hover:bg-[#0398DC] flex items-center gap-2 w-full lg:w-auto"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <FiPlusCircle className="text-xl" /> Add New Task
+            </button>
+            <div className="flex flex-col sm:flex-row gap-3 items-center w-full">
+              <div className="flex items-center gap-2 flex-1">
+                <FiSearch className="opacity-70 text-[#03A9F4]" />
+                <input
+                  className="input input-bordered w-full"
+                  placeholder="Search by subject or topic"
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                />
+              </div>
+              <div className="flex gap-2 flex-col sm:flex-row w-full sm:w-auto">
+                <select
+                  className="select select-bordered w-full sm:w-auto"
+                  value={priorityFilter}
+                  onChange={(e) => setPriorityFilter(e.target.value)}
+                >
+                  <option value="all">All priorities</option>
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+                <select
+                  className="select select-bordered w-full sm:w-auto"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="all">All statuses</option>
+                  <option value="todo">To-do</option>
+                  <option value="done">Done</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Modal for Adding Task */}
         <AnimatePresence>
           {isModalOpen && (
             <motion.div
-              className="fixed inset-0 bg-black/40 opacity-100 flex items-center justify-center z-50 p-4"
+              className="modal modal-open"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
               <motion.div
-                className="bg-blue-50 p-6 rounded-lg shadow-xl w-full max-w-md border border-gray-200"
+                className="modal-box w-full max-w-[90vw] sm:max-w-md p-4 sm:p-6 bg-blue-50"
                 variants={modalVariants}
                 initial="hidden"
                 animate="visible"
@@ -262,110 +302,100 @@ export default function StudyPlanner() {
                     <FiX className="text-xl text-[#03A9F4]" />
                   </button>
                 </div>
-                <form onSubmit={add} className="space-y-4">
-                  <input
-                    className="input input-bordered w-full"
-                    placeholder="Subject (e.g., Physics)"
-                    value={form.subject}
-                    onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
-                    required
-                  />
-                  <input
-                    className="input input-bordered w-full"
-                    placeholder="Topic (e.g., Optics: Lenses)"
-                    value={form.topic}
-                    onChange={(e) => setForm((f) => ({ ...f, topic: e.target.value }))}
-                    required
-                  />
+                <form onSubmit={add} className="space-y-3">
+                  <div className="form-control">
+
+                    <input
+                      className="input input-bordered w-full text-sm"
+                      placeholder="Subject (e.g., Physics)"
+                      value={form.subject}
+                      onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div className="form-control">
+
+                    <input
+                      className="input input-bordered w-full text-sm"
+                      placeholder="Topic (e.g., Optics: Lenses)"
+                      value={form.topic}
+                      onChange={(e) => setForm((f) => ({ ...f, topic: e.target.value }))}
+                      required
+                    />
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="flex items-center gap-2">
-                      <FiFlag className="opacity-70 text-[#03A9F4]" />
-                      <select
-                        className="select select-bordered w-full"
-                        value={form.priority}
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, priority: e.target.value }))
-                        }
-                      >
-                        <option value="low">Low</option>
-                        <option value="medium">Medium</option>
-                        <option value="high">High</option>
-                      </select>
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text text-sm">Priority</span>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <FiFlag className="opacity-70 text-[#03A9F4]" />
+                        <select
+                          className="select select-bordered w-full text-sm"
+                          value={form.priority}
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, priority: e.target.value }))
+                          }
+                        >
+                          <option value="low">Low</option>
+                          <option value="medium">Medium</option>
+                          <option value="high">High</option>
+                        </select>
+                      </div>
                     </div>
+                    <div className="form-control">
+                      <label className="label">
+                        <span className="label-text text-sm">Deadline</span>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <FiCalendar className="opacity-70 text-[#03A9F4]" />
+                        <input
+                          className="input input-bordered w-full text-sm"
+                          type="date"
+                          value={form.deadline}
+                          onChange={(e) =>
+                            setForm((f) => ({ ...f, deadline: e.target.value }))
+                          }
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form-control">
                     <div className="flex items-center gap-2">
-                      <FiCalendar className="opacity-70 text-[#03A9F4]" />
+                      <FiClock className="opacity-70 text-[#03A9F4]" />
                       <input
-                        className="input input-bordered w-full"
-                        type="date"
-                        value={form.deadline}
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, deadline: e.target.value }))
-                        }
-                        required
+                        className="input input-bordered w-full text-sm"
+                        placeholder="Time slot (e.g., Tue 18:00-19:30)"
+                        value={form.slot}
+                        onChange={(e) => setForm((f) => ({ ...f, slot: e.target.value }))}
                       />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <FiClock className="opacity-70 text-[#03A9F4]" />
-                    <input
-                      className="input input-bordered w-full"
-                      placeholder="Time slot (e.g., Tue 18:00-19:30) — optional"
-                      value={form.slot}
-                      onChange={(e) => setForm((f) => ({ ...f, slot: e.target.value }))}
-                    />
+                  <div className="flex flex-col sm:flex-row gap-2 justify-end mt-4">
+                    <button
+                      type="button"
+                      className="btn btn-sm text-[#03A9F4] border-[#03A9F4] w-full sm:w-auto"
+                      onClick={() => setIsModalOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-sm bg-[#03A9F4] text-white hover:bg-[#0398DC] w-full sm:w-auto"
+                    >
+                      Add Task
+                    </button>
                   </div>
-                  <button className="btn bg-[#03A9F4] text-white hover:bg-[#0398DC] w-full">
-                    Add Task
-                  </button>
                 </form>
-                <p className="text-xs opacity-70 mt-2 text-center">
+                <p className="text-xs opacity-70 mt-4 text-center">
                   Tip: Break large goals into smaller topics and assign a specific slot.
                 </p>
               </motion.div>
+              <div className="modal-backdrop" onClick={() => setIsModalOpen(false)} />
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Search & Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="card bg-base-100 shadow p-4 rounded-lg border border-gray-200 mb-6"
-        >
-          <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-            <div className="flex items-center gap-2 flex-1">
-              <FiSearch className="opacity-70 text-[#03A9F4]" />
-              <input
-                className="input input-bordered w-full"
-                placeholder="Search by subject or topic"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-2 flex-col sm:flex-row">
-              <select
-                className="select select-bordered w-full sm:w-auto"
-                value={priorityFilter}
-                onChange={(e) => setPriorityFilter(e.target.value)}
-              >
-                <option value="all">All priorities</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
-              <select
-                className="select select-bordered w-full sm:w-auto"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="all">All statuses</option>
-                <option value="todo">To-do</option>
-                <option value="done">Done</option>
-              </select>
-            </div>
-          </div>
-        </motion.div>
 
         {/* Task Lists */}
         <motion.div
@@ -374,9 +404,11 @@ export default function StudyPlanner() {
           transition={{ duration: 0.5 }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-6"
         >
-          {/* To-Do Tasks (Left, 2-column grid) */}
+          {/* To-Do Tasks (Left, 2-column grid on sm and up) */}
           <div>
-            <h2 className="text-xl font-semibold text-white bg-[#03A9F4] p-2 mb-4 rounded-lg text-center">To-Do Tasks: {todoTasks.length}</h2>
+            <h2 className="text-xl font-semibold text-white bg-[#03A9F4] p-2 mb-4 rounded-lg text-center">
+              To-Do Tasks: {todoTasks.length}
+            </h2>
             {todoTasks.length === 0 && (
               <div className="alert alert-info">No to-do tasks found</div>
             )}
@@ -433,7 +465,9 @@ export default function StudyPlanner() {
 
           {/* Done Tasks (Right, 1-column grid) */}
           <div>
-            <h2 className="text-xl font-semibold text-white bg-[#03A9F4] p-2 mb-4 rounded-lg text-center">Completed Tasks: {doneTasks.length}</h2>
+            <h2 className="text-xl font-semibold text-white bg-[#03A9F4] p-2 mb-4 rounded-lg text-center">
+              Completed Tasks: {doneTasks.length}
+            </h2>
             {doneTasks.length === 0 && (
               <div className="alert alert-info">No completed tasks found</div>
             )}

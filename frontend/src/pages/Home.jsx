@@ -59,7 +59,7 @@ export default function Home() {
                 onClick={() => setIsOpen(true)}
                 className="btn text-[#03A9F4] border-[#03A9F4] flex items-center gap-2"
               >
-                <FaPlayCircle /> Watch Video
+                <FaPlayCircle className="animate-pulse" /> Watch Video
               </button>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function Home() {
       {/* Video Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-white/20  flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-lg w-11/12 md:w-3/4 lg:w-1/2 p-4 relative">
+          <div className="bg-blue-50 rounded-2xl shadow-lg w-11/12 md:w-3/4 lg:w-1/2 p-4 relative">
             {/* Close Button */}
             <button
               onClick={() => setIsOpen(false)}
