@@ -231,14 +231,14 @@ export default function StudyPlanner() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="card bg-base-100 shadow p-4 rounded-lg border border-gray-200 mb-6"
+          className="card rounded-lg mb-6"
         >
           <div className="flex flex-col lg:flex-row gap-4 items-center">
             <button
               className="btn btn-sm lg:btn-md bg-[#03A9F4] text-white hover:bg-[#0398DC] flex items-center gap-2 w-full lg:w-auto"
               onClick={() => setIsModalOpen(true)}
             >
-              <FiPlusCircle className="text-xl" /> Add New Task
+              <FiPlusCircle className="text-xl animate-pulse" /> <span className="animate-pulse">Add New Task</span>
             </button>
             <div className="flex flex-col sm:flex-row gap-3 items-center w-full">
               <div className="flex items-center gap-2 flex-1">
@@ -410,7 +410,7 @@ export default function StudyPlanner() {
               To-Do Tasks: {todoTasks.length}
             </h2>
             {todoTasks.length === 0 && (
-              <div className="alert alert-info">No to-do tasks found</div>
+              <div className="alert alert-info text-white font-semibold">No to-do tasks found</div>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {todoTasks.map((t, i) => (
@@ -469,7 +469,7 @@ export default function StudyPlanner() {
               Completed Tasks: {doneTasks.length}
             </h2>
             {doneTasks.length === 0 && (
-              <div className="alert alert-info">No completed tasks found</div>
+              <div className="alert alert-info text-white font-semibold">No completed tasks found</div>
             )}
             <div className="grid grid-cols-1 gap-4">
               {doneTasks.map((t, i) => (
