@@ -9,11 +9,12 @@ export default function NotFound() {
     <div className="h-screen w-full flex flex-col items-center justify-center px-4 text-center">
       {/* Animated Icon */}
       <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+     initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 120, damping: 12 }}
         className="mb-6"
       >
-        <FaExclamationTriangle className="text-[#03A9F4] text-7xl md:text-8xl" />
+        <FaExclamationTriangle className="text-[#03A9F4] text-7xl md:text-8xl animate-pulse" />
       </motion.div>
 
       {/* 404 Title */}
@@ -26,30 +27,6 @@ export default function NotFound() {
         404
       </motion.h1>
 
-      {/* Subtitle */}
-      <motion.p
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
-        className="mt-4 text-lg md:text-2xl text-[#0398DC] font-medium"
-      >
-        Oops! Not Found Page.
-      </motion.p>
-
-      {/* Go Home Button */}
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="mt-6"
-      >
-        <Link
-          to="/"
-          className="px-6 py-3 rounded-lg bg-[#03A9F4] text-white font-semibold shadow-md hover:bg-[#0288D1] transition"
-        >
-          🏠 Back to home
-        </Link>
-      </motion.div>
-
       {/* Brand Link */}
       <motion.p
         initial={{ opacity: 0 }}
@@ -59,9 +36,9 @@ export default function NotFound() {
       >
         <Link
           to="/"
-          className="flex items-center text-xl md:text-2xl text-[#03A9F4] hover:text-[#0288D1] transition"
+          className="flex items-center text-xl border border-[#03A9F4] btn md:text-2xl text-[#03A9F4] hover:text-[#0288D1] transition"
         >
-          <PiStudentDuotone className="mr-2"/> Student Toolkit
+          <PiStudentDuotone className="mr-2 animate-pulse"/><span className="animate-pulse">Student Toolkit</span>
         </Link>
       </motion.p>
     </div>
