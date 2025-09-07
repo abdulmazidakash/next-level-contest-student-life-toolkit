@@ -16,6 +16,7 @@ import ProfilePage from "./pages/profile/ProfilePage";
 import AboutUsPage from "./pages/about-us/AboutUsPage";
 import TermsAndConditions from "./pages/terms-and-conditions/TermsAndConditions";
 import Footer from "./components/Footer";
+import ExamRoutine from "./pages/exam-routine/ExamRoutine";
 
 export default function App() {
   return (
@@ -76,6 +77,14 @@ export default function App() {
             }
           />
           <Route
+            path="/dashboard/exam-routine"
+            element={
+               <ProtectedRoute>
+                 <ExamRoutine />
+               </ProtectedRoute>
+            }
+          />
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
@@ -93,6 +102,12 @@ export default function App() {
             path="/terms-and-conditions"
             element={
                 <TermsAndConditions />
+            }
+          />
+          <Route
+            path="/exam-routine"
+            element={
+                <ExamRoutine />
             }
           />
 

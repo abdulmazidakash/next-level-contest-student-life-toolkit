@@ -51,6 +51,7 @@ async function run() {
     const plannersCol = db.collection('planners');
     const questionsCol = db.collection('questions');
     const statsCol = db.collection("stats");
+    const examRoutinesCol = db.collection("examRoutines");
 
     // -----------------------
     // JWT creation endpoint
@@ -642,6 +643,75 @@ async function run() {
         res.status(500).send({ message: 'Failed to fetch progress' });
       }
     });
+
+    // -----------------------
+    // EXAM ROUTINE (CRUD)
+    // -----------------------
+    app.post("/exam-routines", verifyToken, async (req, res) => {
+      try {
+        const payload = req.body; 
+        // { email, date, day, courseCode, courseName, department, examTime }
+
+        if (!payload.email || !payload.date || !payload.day || !payload.courseCode || !payload.courseName || !payload.examTime) {
+          return res.status(400).send({ message: "All fields required" });
+        }
+
+        payload.createdAt = Date.now();
+        const result = await examRoutinesCol.insertOne(payload);
+        res.send(result);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: "Failed to add exam routine" });
+      }
+    });
+
+    // get all exam routines for a user
+    app.get("/exam-routines/:email", verifyToken, async (req, res) => {
+      try {
+        const email = req.params.email;
+        const items = await examRoutinesCol.find({ email }).sort({ date: 1 }).toArray();
+        res.send(items);
+      } catch (err) {
+        res.status(500).send({ message: "Failed to fetch exam routines" });
+      }
+    });
+
+    // update
+    app.put("/exam-routines/:id", verifyToken, async (req, res) => {
+      try {
+        const id = req.params.id;
+        const payload = req.body;
+
+        if (!ObjectId.isValid(id)) return res.status(400).send({ message: "Invalid ID" });
+        if (payload._id) delete payload._id;
+
+        const result = await examRoutinesCol.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { ...payload, updatedAt: Date.now() } }
+        );
+
+        if (result.matchedCount === 0) return res.status(404).send({ message: "Exam routine not found" });
+        res.send({ success: true, message: "Exam routine updated successfully" });
+      } catch (err) {
+        res.status(500).send({ message: "Failed to update exam routine" });
+      }
+    });
+
+    // delete
+    app.delete("/exam-routines/:id", verifyToken, async (req, res) => {
+      try {
+        const id = req.params.id;
+        if (!ObjectId.isValid(id)) return res.status(400).send({ message: "Invalid ID" });
+
+        const result = await examRoutinesCol.deleteOne({ _id: new ObjectId(id) });
+        if (result.deletedCount === 0) return res.status(404).send({ message: "Exam routine not found" });
+
+        res.send({ success: true, deletedCount: result.deletedCount });
+      } catch (err) {
+        res.status(500).send({ message: "Failed to delete exam routine" });
+      }
+    });
+
 
 
 
