@@ -44,7 +44,7 @@ export default function Register() {
   return (
     <>
     <Helmet>
-      <title>Register | Student Toolkit</title>
+      <title>Register | Brain Box</title>
     </Helmet>
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -106,7 +106,7 @@ export default function Register() {
         </Link>
       </p>
       <p className="mt-3 font-bold text-center">
-        <Link to="/" className="btn btn-ghost text-xl font-bold items-center text-[#03A9F4]"><PiStudentDuotone className="font-bold" /> Student Toolkit</Link>
+        <Link to="/" className="btn btn-ghost text-xl font-bold items-center text-[#03A9F4]"><PiStudentDuotone className="font-bold" /> Brain Box</Link>
       </p>
     </motion.div>
     </>

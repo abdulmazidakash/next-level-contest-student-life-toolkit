@@ -55,7 +55,7 @@ export default function WeeklyProgress() {
   return (
    <>
    <Helmet>
-      <title>Weekly Progress | Student Toolkit</title>
+      <title>Weekly Progress | Brain Box</title>
     </Helmet>
    <motion.div
       initial={{ opacity: 0, y: -20 }}

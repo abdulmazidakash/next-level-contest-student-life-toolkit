@@ -28,7 +28,7 @@ const linkClass = ({ isActive }) => `text-white ${isActive ? "underline" : ""}`;
             {nav}
           </ul>
         </div>
-        <Link to="/" className="btn btn-ghost text-xl font-bold items-center"><PiStudentDuotone className="font-bold" /> Student Toolkit</Link>
+        <Link to="/" className="btn btn-ghost text-xl font-bold items-center"><PiStudentDuotone className="font-bold" /> Brain Box</Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{nav}</ul>

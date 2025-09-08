@@ -14,7 +14,7 @@ const AboutUsPage = () => {
   return (
     <>
     <Helmet>
-      <title>About Us | Student Toolkit</title>
+      <title>About Us | Brain Box</title>
     </Helmet>
     <div className="min-h-screen  flex flex-col items-center px-4 py-10">
       {/* Title Section */}
@@ -34,7 +34,7 @@ const AboutUsPage = () => {
         transition={{ delay: 0.4, duration: 0.8 }}
         className="max-w-3xl text-center text-gray-700 text-base md:text-lg leading-relaxed mb-10"
       >
-        The <strong className="text-[#03A9F4]">Student Toolkit</strong> is designed to make learning and task
+        The <strong className="text-[#03A9F4]">Brain Box</strong> is designed to make learning and task
         management seamless. From tracking assignments to accessing resources,
         everything is built with modern technology to ensure <span className="text-[#03A9F4] font-semibold">speed,
         security, and flexibility</span> across all devices.

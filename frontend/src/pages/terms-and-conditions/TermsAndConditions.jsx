@@ -26,7 +26,7 @@ const TermsAndConditions = () => {
   return (
     <>
     <Helmet>
-      <title>Terms and Conditions | Student Toolkit</title>
+      <title>Terms and Conditions | Brain Box</title>
     </Helmet>
     <motion.div
       className="max-w-4xl mx-auto p-6  shadow-lg rounded-lg my-8 border border-gray-100"
@@ -39,14 +39,14 @@ const TermsAndConditions = () => {
       </h1>
 
       <p className="text-center mb-10 text-gray-600">
-        Welcome to Student Toolkit. These terms and conditions outline the rules and regulations for the use of our website and services. By accessing this website, we assume you accept these terms and conditions. Do not continue to use Student Life Toolkit if you do not agree to all of the terms and conditions stated on this page.
+        Welcome to <span className='text-[#03A9F4]'>Brain Box</span>. These terms and conditions outline the rules and regulations for the use of our website and services. By accessing this website, we assume you accept these terms and conditions. Do not continue to use <span className='text-[#03A9F4]'>Brain Box</span> if you do not agree to all of the terms and conditions stated on this page.
       </p>
 
       <motion.section variants={sectionVariants} className="mb-8">
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
           <FaUserShield className="text-blue-500" /> 1. User Accounts
         </h2>
-        <p className="text-gray-700">
+        <p className="text-gray-700 text-justify">
           To access certain features of the app, you may be required to create an account. You must provide accurate and complete information and keep your account information updated. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.
         </p>
       </motion.section>
@@ -55,7 +55,7 @@ const TermsAndConditions = () => {
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
           <FaFileAlt className="text-green-500" /> 2. Content and Data
         </h2>
-        <p className="text-gray-700">
+        <p className="text-gray-700 text-justify">
           Our app allows you to track classes, budgets, study plans, and generate exam questions. All data you input is your responsibility. We do not claim ownership of your content but may use anonymized data for improving our services. Ensure your content does not violate any laws or infringe on third-party rights.
         </p>
       </motion.section>
@@ -76,8 +76,8 @@ const TermsAndConditions = () => {
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
           <FaExclamationTriangle className="text-yellow-500" /> 4. Limitation of Liability
         </h2>
-        <p className="text-gray-700">
-          Student Toolkit is provided "as is" without any warranties. We are not liable for any damages arising from the use of the app, including loss of data or inaccuracies in generated content. Use at your own risk.
+        <p className="text-gray-700 text-justify">
+          <span className='text-[#03A9F4]'>Brain Box</span> is provided "as is" without any warranties. We are not liable for any damages arising from the use of the app, including loss of data or inaccuracies in generated content. Use at your own risk.
         </p>
       </motion.section>
 
@@ -85,7 +85,7 @@ const TermsAndConditions = () => {
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
           <FaHandshake className="text-purple-500" /> 5. Changes to Terms
         </h2>
-        <p className="text-gray-700">
+        <p className="text-gray-700 text-justify">
           We may update these terms from time to time. Continued use of the app after changes constitutes acceptance of the new terms. It is your responsibility to review these terms periodically.
         </p>
       </motion.section>
@@ -98,9 +98,8 @@ const TermsAndConditions = () => {
           These terms are governed by the laws of [Your Country/State], without regard to its conflict of law principles.
         </p>
       </motion.section>
-
       <p className="text-center text-gray-600 mt-10">
-        If you have any questions about these Terms and Conditions, please contact us at support@studenttoolkit.com.
+        If you have any questions about these Terms and Conditions, please contact us at support@brainbox.com.
       </p>
     </motion.div>
     </>

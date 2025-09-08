@@ -75,7 +75,7 @@ export default function ExamRoutine() {
   return (
    <>
     	<Helmet>
-		   <title>My Exam Routine | Student Toolkit</title>
+		   <title>My Exam Routine | Brain Box</title>
 		 </Helmet>
    	{/* Header */}
       <motion.div

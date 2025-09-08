@@ -38,7 +38,7 @@ export default function NotFound() {
           to="/"
           className="flex items-center text-xl border border-[#03A9F4] btn md:text-2xl text-[#03A9F4] hover:text-[#0288D1] transition"
         >
-          <PiStudentDuotone className="mr-2 animate-pulse"/><span className="animate-pulse">Student Toolkit</span>
+          <PiStudentDuotone className="mr-2 animate-pulse"/><span className="animate-pulse">Brain Box</span>
         </Link>
       </motion.p>
     </div>

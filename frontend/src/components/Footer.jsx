@@ -34,7 +34,7 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-8 md:gap-4">
         {/* Logo/Brand Section */}
         <div className="text-center md:text-left">
-         <Link to="/" className="btn btn-ghost text-xl font-bold items-center text-[#03A9F4]"><PiStudentDuotone className="font-bold" /> Student Toolkit</Link>
+         <Link to="/" className="btn btn-ghost text-xl font-bold items-center text-[#03A9F4]"><PiStudentDuotone className="font-bold" /> Brain Box</Link>
           <p className="text-sm">Make your student life simpler</p>
         </div>
 
@@ -66,7 +66,7 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <motion.li variants={linkVariants} whileHover="hover">
               <a href="mailto:support@studentlifetoolkit.com" className="flex items-center gap-2 hover:text-[#03A9F4]">
-                <FaEnvelope /> support@studenttoolkit.com
+                <FaEnvelope /> support@brainbox.com
               </a>
             </motion.li>
             <motion.li variants={linkVariants} whileHover="hover">
@@ -99,7 +99,7 @@ const Footer = () => {
 
       {/* Copyright */}
       <div className="mt-8 text-center text-sm border-t border-base-content/20 pt-4">
-        © {new Date().getFullYear()} Student Toolkit. All rights reserved.
+        © {new Date().getFullYear()} Brain Box. All rights reserved.
       </div>
     </motion.footer>
   );

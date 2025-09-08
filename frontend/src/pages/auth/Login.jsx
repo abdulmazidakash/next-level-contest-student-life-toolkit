@@ -58,7 +58,7 @@ export default function Login() {
   return (
     <>
       <Helmet>
-        <title>Login | Student Toolkit</title>
+        <title>Login | Brain Box</title>
       </Helmet>
 
       <motion.div
@@ -124,7 +124,7 @@ export default function Login() {
 
         <p className="mt-3 font-bold text-center">
           <Link to="/" className="btn btn-ghost text-xl font-bold items-center text-[#03A9F4]">
-            <PiStudentDuotone className="font-bold" /> Student Toolkit
+            <PiStudentDuotone className="font-bold" /> Brain Box
           </Link>
         </p>
       </motion.div>

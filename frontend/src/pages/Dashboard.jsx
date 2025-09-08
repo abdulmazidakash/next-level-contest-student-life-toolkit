@@ -27,7 +27,7 @@ export default function Dashboard() {
   return (
     <>
       <Helmet>
-        <title>Dashboard | Student Toolkit</title>
+        <title>Dashboard | Brain Box</title>
       </Helmet>
 
       <motion.div

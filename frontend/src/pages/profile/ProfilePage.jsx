@@ -37,7 +37,7 @@ export default function ProfilePage() {
   return (
     <>
     <Helmet>
-      <title>Profile | Student Toolkit</title>
+      <title>Profile | Brain Box</title>
     </Helmet>
     <motion.div
       className="max-w-5xl mx-auto p-4 md:p-8 space-y-8"

@@ -115,7 +115,7 @@ export default function ClassSchedule() {
   return (
     <>
       <Helmet>
-        <title>My Class Schedule | Student Toolkit</title>
+        <title>My Class Schedule | Brain Box</title>
       </Helmet>
 
       {/* Header */}

@@ -119,7 +119,7 @@ export default function Budget() {
   return (
     <>
     <Helmet>
-      <title>My Budget Track | Student Toolkit</title>
+      <title>My Budget Track | Brain Box</title>
     </Helmet>
     <motion.div
       initial={{ opacity: 0, y: -20 }}

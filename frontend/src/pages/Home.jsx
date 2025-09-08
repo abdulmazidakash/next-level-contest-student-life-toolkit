@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>Home | Student Toolkit</title>
+        <title>Home | Brain Box</title>
       </Helmet>
       <div className="">
         {/* Hero Section */}

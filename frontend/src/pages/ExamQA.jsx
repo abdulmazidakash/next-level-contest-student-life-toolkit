@@ -92,7 +92,7 @@ export default function ExamQA() {
   return (
     <>
       <Helmet>
-        <title>AI Generate Exam Q & A | Student Toolkit</title>
+        <title>AI Generate Exam Q & A | Brain Box</title>
       </Helmet>
 
       <motion.div

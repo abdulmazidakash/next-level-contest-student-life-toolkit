@@ -212,7 +212,7 @@ export default function StudyPlanner() {
   return (
     <>
       <Helmet>
-        <title>My Study Plan | Student Toolkit</title>
+        <title>My Study Plan | Brain Box</title>
       </Helmet>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
